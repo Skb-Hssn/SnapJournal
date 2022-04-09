@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:snapjournal/Database/database.dart';
+import 'user.dart';
 
 class UserRegistration extends StatefulWidget {
   UserRegistration({Key? key}) : super(key: key);
@@ -21,10 +23,24 @@ class _UserRegistration extends State<UserRegistration> {
 
   final _formKey = GlobalKey<FormState>();
 
+  late User user;
+
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+  }
+
+  Future getUser() async {
+    List list = await DayDatabase.instance.readUser();
+    if(list.isNotEmpty) {
+      user = list[0];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return _loginform(context);
-
   }
 
   Widget _loginform(BuildContext context) {
@@ -76,9 +92,9 @@ class _UserRegistration extends State<UserRegistration> {
       onTap: () async {
         final datePick= await showDatePicker(
             context: context,
-            initialDate: new DateTime.now(),
-            firstDate: new DateTime(1900),
-            lastDate: new DateTime(2100)
+            initialDate: DateTime.now(),
+            firstDate: DateTime(1900),
+            lastDate: DateTime(2100)
         );
 
         if(datePick != null) {
@@ -126,21 +142,40 @@ class _UserRegistration extends State<UserRegistration> {
   }
 
   Widget _loginButton(BuildContext context){
-  return ElevatedButton(
-    onPressed: () {
-      setState(() {
-        if (name == '') {
-          errorMassage = 'Username can\'t be empty';
-        } else if (password == '') {
-          errorMassage = 'Password can\'t be empty';
-        } else if (password == retypedPassword) {
-          Navigator.pushReplacementNamed(context, '/home');
-        } else {
-          errorMassage = 'Password doesn\'t match';
-        }
-      });
-    },
-    child: const Text('Login')
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          if (name == '') {
+            errorMassage = 'Username can\'t be empty';
+          } else if (password == '') {
+            errorMassage = 'Password can\'t be empty';
+          } else if (dob == null) {
+            errorMassage = 'Date of birth cannot be empty';
+          } else if(password != retypedPassword) {
+            errorMassage = 'Password doesn\'t match';
+          } else if(securityquestionanswer == null) {
+            errorMassage = 'Answert cannot be empty.';
+          } else {
+            if(user != null) {
+              DayDatabase.instance.deleteUser(user.name!);
+            }
+
+            DayDatabase.instance.insertUser(
+              User.allFields(
+                name: name,
+                dob: dob,
+                password: password,
+                isLoggedOut: false,
+                isPasswordSet: true,
+                favouriteQuestion: securityquestion,
+                favouriteQuestionAnswer: securityquestionanswer
+              )
+            );
+            Navigator.pushReplacementNamed(context, '/home');
+          }
+        });
+      },
+      child: const Text('Login')
   );
 
  }
@@ -173,6 +208,4 @@ class _UserRegistration extends State<UserRegistration> {
       },
     );
   }
-
-
 }
