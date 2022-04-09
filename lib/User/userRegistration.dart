@@ -9,9 +9,12 @@ class UserRegistration extends StatefulWidget {
 class _UserRegistration extends State<UserRegistration> {
 
   String? name = '';
-  DateTime? dob;
+  DateTime? dob;  
   String? password = '';
   String? retypedPassword;
+
+  String? securityquestion;
+  String? securityquestionanswer;
 
   String dobText = "Enter Date of Birth";
   String errorMassage = "";
@@ -21,50 +24,7 @@ class _UserRegistration extends State<UserRegistration> {
   @override
   Widget build(BuildContext context) {
     return _loginform(context);
-    return Scaffold(
-      body: Column (
-        children: [
-          TextField(
-            decoration: const InputDecoration(
-              hintText: 'Enter Name',
-            ),
-            onChanged: (String text) {
-              name = text;
-            },
-          ),
-          Text(
-            dobText,
-          ),
-          GestureDetector(
-            child: new Icon(Icons.calendar_today),
-            onTap: () async {
-              final datePick= await showDatePicker(
-                  context: context,
-                  initialDate: new DateTime.now(),
-                  firstDate: new DateTime(1900),
-                  lastDate: new DateTime(2100)
-              );
 
-              if(datePick != null) {
-                setState(() {
-                  dob = datePick;
-                  dobText = "${dob?.day}/${dob?.month}/${dob?.year}";
-                });
-              }
-            }
-          ),
-
-          TextField(
-            decoration: const InputDecoration(
-              hintText: 'Enter Name',
-            ),
-            onChanged: (String text) {
-              name = text;
-            },
-          ),
-        ],
-      ),
-    );
   }
 
   Widget _loginform(BuildContext context) {
@@ -82,6 +42,8 @@ class _UserRegistration extends State<UserRegistration> {
               _passwordField(),
               _retypedPasswordField(),
               _errorMassage(),
+              _securityQA(),
+              _securityQAnswer(),
               _loginButton(context),
             ],
           ),
@@ -180,5 +142,37 @@ class _UserRegistration extends State<UserRegistration> {
     },
     child: const Text('Login')
   );
+
  }
+  final List<String> securityquestions = ["What is your pet's name?", "What is your favourite color?", "What is the name of your first friend?"];
+
+  Widget _securityQA() {
+    return DropdownButtonFormField(
+        value: securityquestions[0],
+        items: securityquestions.map((sQA){
+          return DropdownMenuItem(
+            value: sQA,
+            child: Text('$sQA'),
+          );
+        }).toList(),
+        onChanged: (val){
+          securityquestion = val as String?;
+        } );
+  }
+
+
+  Widget _securityQAnswer() {
+    return TextFormField(
+      decoration: const InputDecoration(
+        hintText: " ",
+        labelText: "Your answer",
+      ),
+      validator: (value) => null,
+      onChanged: (String text) {
+        securityquestionanswer = text;
+      },
+    );
+  }
+
+
 }
