@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 import 'parallax_area.dart';
 
-/// A widget that overlap two widgets and gives a parallax effect to the background one.
+/// A widget that overlap two Widgets and gives a Animation_parallax effect to the background one.
 /// The effect is obtained by using a Stack and a nested [OverflowBox] twice the size of the main child
 /// For this widget working it needs to find a [ParallaxArea] somewhere above the tree
-/// The center of the parallax effect will be on the center of the first [ParallaxArea] found
+/// The center of the Animation_parallax effect will be on the center of the first [ParallaxArea] found
 /// If no [ParallaxArea] is found this widget will simply render the [child] and the [background] without any effect.
 class ParallaxWidget extends StatefulWidget {
   const ParallaxWidget({
@@ -36,25 +36,25 @@ class ParallaxWidget extends StatefulWidget {
 
   /// The width multiplier factor, the background will be as larger as the child
   /// multiplied by the overflowWidthFactor.
-  /// increasing this value will increase the parallax effect during horizontal scroll
+  /// increasing this value will increase the Animation_parallax effect during horizontal scroll
   /// Min value 1, default value 2
   final double overflowWidthFactor;
 
   /// The height multiplier factor, the background will be as taller as the child
   /// multiplied by the overflowHeightFactor
-  /// increasing this value will increase the parallax effect during vertical scroll
+  /// increasing this value will increase the Animation_parallax effect during vertical scroll
   /// Min value 1, default value 2
   final double overflowHeightFactor;
 
-  /// if true the parallax effect will be disabled for the horizontal Axis
+  /// if true the Animation_parallax effect will be disabled for the horizontal Axis
   /// default value false
   final bool fixedHorizontal;
 
-  /// if true the parallax effect will be disabled for the vertical Axis
+  /// if true the Animation_parallax effect will be disabled for the vertical Axis
   /// default value false
   final bool fixedVertical;
 
-  /// if true the parallax effect will be inverted for both Axis
+  /// if true the Animation_parallax effect will be inverted for both Axis
   /// default value false
   final bool inverted;
 
@@ -71,7 +71,7 @@ class ParallaxWidget extends StatefulWidget {
   /// default value true
   final bool clipOverflow;
 
-  /// give the parallax a general padding, used to avoid pixel
+  /// give the Animation_parallax a general padding, used to avoid pixel
   /// bleeding if the content doesn't cover completely the viewport
   /// default value [EdgeInsets.zero]
   final EdgeInsets parallaxPadding;
@@ -209,12 +209,12 @@ class _ParallaxWidgetState extends State<ParallaxWidget> {
     double verticalOffsetRatio;
     double horizontalOffsetRatio;
 
-    // Only move the parallax widget if visibile inside the parallax area
+    // Only move the Animation_parallax widget if visibile inside the Animation_parallax area
     if (!shiftedRect.overlaps(areaShiftedRect)) {
       return null;
     }
 
-    // Compute the correct vertical axis parallax value taking account of alignment parameter,
+    // Compute the correct vertical axis Animation_parallax value taking account of alignment parameter,
     double centerVertical = shiftedRect.center.dy;
     double startingVerticalPoint =
         centerVertical + shiftedRect.height / 2 * widget.alignment.y;
@@ -230,7 +230,7 @@ class _ParallaxWidgetState extends State<ParallaxWidget> {
       verticalOffsetRatio = verticalOffsetRatio * -2 + 1 + widget.alignment.y;
     }
 
-    // Compute the correct horizontal axis parallax value taking account of alignment parameter,
+    // Compute the correct horizontal axis Animation_parallax value taking account of alignment parameter,
     final centerHorizontal = shiftedRect.center.dx;
     final startingHorizontalPoint =
         centerHorizontal + shiftedRect.width / 2 * widget.alignment.x;
