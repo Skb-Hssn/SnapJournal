@@ -3,6 +3,7 @@ import 'package:snapjournal/Database/database.dart';
 import '../Model/User/userRegistration.dart';
 import '../firstTimeView.dart';
 import '../Home/home.dart';
+import '../Model/User/user.dart';
 
 class SnapJournal extends StatefulWidget {
   const SnapJournal({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class _SnapJournal extends State<SnapJournal> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/userRegistration',
+      initialRoute: '/loadingView',
       routes: {
         '/loadingView' : (context) => _Loading(),
         '/firstTime' : (context) => FirstTimeView(),
@@ -62,10 +63,21 @@ class _LoadingView extends State<_Loading> {
 
     bool y = await isPasswordSet();
 
-    setState(() {
-      if(x == true) {
-        Navigator.pushReplacementNamed(context, '/home');
+    setState(() async {
+      if(x) {
+        if(y) {}
+        else {
+          Navigator.pushReplacementNamed(context, '/home');
+        }
       } else {
+        await DayDatabase.instance.insertUser(
+          User(
+            name: 'User',
+            dob: DateTime.now(),
+            password: 'dummy',
+          ),
+        );
+
         Navigator.pushReplacementNamed(context, '/firstTime');
       }
     });
@@ -76,7 +88,9 @@ class _LoadingView extends State<_Loading> {
     return list.isNotEmpty;
   }
 
-  bool isPasswordSet() {
-    return true;
+  static Future<bool> isPasswordSet() async {
+    List list = await DayDatabase.instance.readUser();
+    if(list.isEmpty) return false;
+    return list[0].isPasswordSet;
   }
 }

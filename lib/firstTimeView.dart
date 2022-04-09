@@ -62,7 +62,9 @@ class FirstTimeView extends StatelessWidget {
               children:  [
                 Expanded(
                   child: TextButton(
-                    onPressed: () {}, 
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/home');
+                    }, 
                     child: const Text(
                       'NO',
                       style: TextStyle(
@@ -76,7 +78,9 @@ class FirstTimeView extends StatelessWidget {
 
                 Expanded(
                   child: TextButton(
-                    onPressed: () {}, 
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, '/userRegistration');
+                    }, 
                     child: Text(
                       'YES',
                       style: TextStyle(
