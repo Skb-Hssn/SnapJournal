@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Widget used to provide his viewport boundary and scroll notification
 /// to any [ParallaxWidget] along the subtree.
-/// This widget needs to be placed above the [Scrollable] where we want to obtain the parallax effect
+/// This widget needs to be placed above the [Scrollable] where we want to obtain the Animation_parallax effect
 class ParallaxArea extends StatefulWidget {
   ParallaxArea({Key? key, required this.child, this.scrollController})
       : super(key: key);

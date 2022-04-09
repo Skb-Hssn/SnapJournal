@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'constants/enums.dart';
+import 'SnapJournal/constants/enums.dart';
 
 
 

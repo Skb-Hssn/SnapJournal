@@ -148,7 +148,7 @@ class _UserRegistration extends State<UserRegistration> {
 
   Widget _securityQA() {
     return DropdownButtonFormField(
-        value: securityquestions[0],
+        value: securityquestion ?? securityquestions[0],
         items: securityquestions.map((sQA){
           return DropdownMenuItem(
             value: sQA,

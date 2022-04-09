@@ -1,4 +1,4 @@
-import 'package:snapjournal/User/user.dart';
+import '../Model/User/user.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io';
