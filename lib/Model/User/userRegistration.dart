@@ -192,7 +192,7 @@ class _UserRegistration extends State<UserRegistration> {
         }).toList(),
         onChanged: (val){
           securityquestion = val as String?;
-        } );
+        });
   }
 
 
