@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:snapjournal/Database/database.dart';
+import 'package:snapjournal/Verification/password_reset.dart';
 import '../Model/User/userRegistration.dart';
+import '../Verification/verification_view.dart';
 import '../firstTimeView.dart';
 import '../Home/home.dart';
 import '../Model/User/user.dart';
@@ -17,12 +19,14 @@ class _SnapJournal extends State<SnapJournal> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/loadingView',
+      initialRoute: '/verificationview',
       routes: {
         '/loadingView' : (context) => _Loading(),
         '/firstTime' : (context) => FirstTimeView(),
         '/home' : (context) => Home(),
         '/userRegistration' : (context) => UserRegistration(),
+        '/verificationview': (context) => VerificationView(),
+        '/passwordreset': (context) => ResetPassword(),
       },
       theme: ThemeData(),
     );
