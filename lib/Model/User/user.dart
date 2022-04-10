@@ -37,8 +37,8 @@ class User {
   }
   );
 
-  static bool verifyPassword(String password) {
-    return true;
+  bool verifyPassword(String? password) {
+    return (this.password == password);
   }
 
   Map<String, Object?> toJson() => {

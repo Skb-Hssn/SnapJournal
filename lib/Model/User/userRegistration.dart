@@ -32,7 +32,7 @@ class _UserRegistration extends State<UserRegistration> {
   }
 
   Future getUser() async {
-    List list = await DayDatabase.instance.readUser();
+    List list = await DB.instance.readUser();
     if(list.isNotEmpty) {
       user = list[0];
     }
@@ -157,10 +157,10 @@ class _UserRegistration extends State<UserRegistration> {
             errorMassage = 'Answert cannot be empty.';
           } else {
             if(user != null) {
-              DayDatabase.instance.deleteUser(user.name!);
+              DB.instance.deleteUser(user.name!);
             }
 
-            DayDatabase.instance.insertUser(
+            DB.instance.insertUser(
               User.allFields(
                 name: name,
                 dob: dob,

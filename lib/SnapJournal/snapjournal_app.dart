@@ -19,7 +19,7 @@ class _SnapJournal extends State<SnapJournal> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/verificationview',
+      initialRoute: '/loadingView',
       routes: {
         '/loadingView' : (context) => _Loading(),
         '/firstTime' : (context) => FirstTimeView(),
@@ -74,7 +74,7 @@ class _LoadingView extends State<_Loading> {
           Navigator.pushReplacementNamed(context, '/home');
         }
       } else {
-        await DayDatabase.instance.insertUser(
+        await DB.instance.insertUser(
           User(
             name: 'User',
             dob: DateTime.now(),
@@ -88,12 +88,12 @@ class _LoadingView extends State<_Loading> {
   }
 
   static Future<bool> userAlreayExists() async {
-    List list = await DayDatabase.instance.readUser();
+    List list = await DB.instance.readUser();
     return list.isNotEmpty;
   }
 
   static Future<bool> isPasswordSet() async {
-    List list = await DayDatabase.instance.readUser();
+    List list = await DB.instance.readUser();
     if(list.isEmpty) return false;
     return list[0].isPasswordSet;
   }

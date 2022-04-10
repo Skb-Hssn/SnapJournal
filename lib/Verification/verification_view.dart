@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:snapjournal/Database/database.dart';
 
+import '../Model/User/user.dart';
 import '../SnapJournal/constants/enums.dart';
 
 
@@ -12,8 +14,25 @@ class VerificationView extends StatefulWidget {
 
 
 class _VerificationView extends State<VerificationView> {
-
+  
+  late User user;
+  
   String? password;
+  
+  @override 
+  void initState() {
+    super.initState();
+    
+    getUser();
+  }
+  
+  Future getUser() async {
+    List list = await DB.instance.readUser();
+    
+    if(list.isNotEmpty){
+      user = list[0];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +96,10 @@ class _VerificationView extends State<VerificationView> {
   Widget _loginButton(BuildContext context){
     return ElevatedButton(
         onPressed: () {
-          Navigator.pushReplacementNamed(context, '/passwordreset');
-          print('$password');
+          if(password != null && user.verifyPassword(password)){
+            Navigator.pushReplacementNamed(context, '/home');
+          }
+          //print('$password');
         },
         child: const Text('Login')
     );
@@ -87,6 +108,7 @@ class _VerificationView extends State<VerificationView> {
  Widget _forgotpass(){
     return TextButton(
         onPressed: (){
+          Navigator.pushReplacementNamed(context, '/passwordreset');
         },
         child: Text('Forgot password?'),
 
@@ -96,17 +118,3 @@ class _VerificationView extends State<VerificationView> {
 
 
 }
-
-
-/*
-Container(
-            child: Text(
-              'Continue with password?',
-              style: TextStyle(
-                fontFamily: 'OpenSansRegular',
-                fontSize: 20,
-                color: Colors.grey[700],
-              ),
-            ),
-          ),
- */

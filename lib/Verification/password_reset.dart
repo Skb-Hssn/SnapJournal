@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../Database/database.dart';
+import '../Model/User/user.dart';
 import '../SnapJournal/constants/enums.dart';
 
 class ResetPassword extends StatefulWidget {
@@ -10,6 +12,26 @@ class ResetPassword extends StatefulWidget {
 }
 
 class _ResetPasswordState extends State<ResetPassword> {
+
+  String ? answer;
+  late User user;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    getUser();
+  }
+
+  Future getUser() async {
+    List list = await DB.instance.readUser();
+
+    if(list.isNotEmpty){
+      user = list[0];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +67,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   Widget _question(){
     return Text(
-      "string"
+      '$user.favouriteQuestion'
     );
   }
 
@@ -53,15 +75,22 @@ class _ResetPasswordState extends State<ResetPassword> {
     return TextFormField(
       decoration: const InputDecoration(
         icon: Icon(Icons.person),
-        hintText: "Enter username",
-        labelText: "Username",
+        hintText: "Enter Answer",
+        labelText: "answer",
       ),
+      validator: (value) => null,
+      onChanged: (String text) {
+         answer = text;
+      },
     );
   }
 
   Widget _verifyQA(BuildContext context){
     return ElevatedButton(
         onPressed: () {
+          if(answer == user.favouriteQuestionAnswer){
+            Navigator.pushReplacementNamed(context, '/home');
+          }
         },
         child: const Text('Verify')
     );
