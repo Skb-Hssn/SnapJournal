@@ -4,19 +4,19 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
-class DayDatabase {
+class DB {
   static const String userTable = 'userTable';
   static const String dayTable = 'day_table';
 
-  static final DayDatabase instance = DayDatabase._init();
+  static final DB instance = DB._init();
   static Database? _database;
 
-  DayDatabase._init();
+  DB._init();
 
   Future<Database> get database async {
     if(_database != null) return _database!;
 
-    _database = await _initDB('daydatabase.db');
+    _database = await _initDB('DB.db');
 
     return _database!;
   }
