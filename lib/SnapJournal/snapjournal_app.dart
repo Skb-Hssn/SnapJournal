@@ -6,6 +6,7 @@ import '../Verification/verification_view.dart';
 import '../firstTimeView.dart';
 import '../Home/home.dart';
 import '../Model/User/user.dart';
+import '../Model/Day/day.dart';
 
 class SnapJournal extends StatefulWidget {
   const SnapJournal({Key? key}) : super(key: key);
@@ -19,7 +20,7 @@ class _SnapJournal extends State<SnapJournal> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/loadingView',
+      initialRoute: '/dayView',
       routes: {
         '/loadingView' : (context) => _Loading(),
         '/firstTime' : (context) => FirstTimeView(),
@@ -27,6 +28,7 @@ class _SnapJournal extends State<SnapJournal> {
         '/userRegistration' : (context) => UserRegistration(),
         '/verificationview': (context) => VerificationView(),
         '/passwordreset': (context) => ResetPassword(),
+        '/dayView': (context) => DayView(),
       },
       theme: ThemeData(),
     );
@@ -69,8 +71,9 @@ class _LoadingView extends State<_Loading> {
 
     setState(() async {
       if(x) {
-        if(y) {}
-        else {
+        if(y) {
+          Navigator.pushReplacementNamed(context, '/userRegistration');
+        } else {
           Navigator.pushReplacementNamed(context, '/home');
         }
       } else {
