@@ -1,12 +1,13 @@
-import '../Model/User/user.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import '../Model/user_model.dart';
 
 class DB {
   static const String userTable = 'userTable';
-  static const String dayTable = 'day_table';
+  static const String dayTable = 'dayTable';
+  static const String imageTable = 'imageTable';
 
   static final DB instance = DB._init();
   static Database? _database;
@@ -45,6 +46,12 @@ class DB {
           ${UserFields.favouriteQuestionAnswer} TEXT NOT NULL
         )
     ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $imageTable (
+          image BLOB 
+        )
+      ''');
   }
 
   Future insertUser(User user) async {
@@ -66,5 +73,25 @@ class DB {
       where: '${UserFields.name} = ?',
       whereArgs: [name],
     );
+  }
+
+  Future insertImage(Map<String, Object ?> image) async {
+    final db = await instance.database;
+    print("__________4_______________");
+    db.insert(imageTable, image);
+    print("__________5_______________");
+
+    final result = await db.query(imageTable);
+    print("__________6_______________");
+
+    print("insert success \n $result");
+  }
+
+  Future <Map<String, Object?>> getImage() async {
+    final db = await instance.database;
+
+    final result = await db.query(imageTable);
+
+    return result[0];
   }
 }

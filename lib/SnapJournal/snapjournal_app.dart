@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:snapjournal/Database/database.dart';
 import 'package:snapjournal/Verification/password_reset.dart';
-import '../Model/User/userRegistration.dart';
+import '../Day/day_view.dart';
+import '../Model/user_model.dart';
+import '../User/userRegistration.dart';
 import '../Verification/verification_view.dart';
 import '../firstTimeView.dart';
 import '../Home/home.dart';
-import '../Model/User/user.dart';
-import '../Model/Day/day.dart';
 
 class SnapJournal extends StatefulWidget {
   const SnapJournal({Key? key}) : super(key: key);

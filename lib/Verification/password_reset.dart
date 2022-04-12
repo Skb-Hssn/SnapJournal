@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../Database/database.dart';
-import '../Model/User/user.dart';
+import '../Model/user_model.dart';
 import '../SnapJournal/constants/enums.dart';
 
 class ResetPassword extends StatefulWidget {
