@@ -15,7 +15,7 @@ import 'Bloc/eventview_bloc.dart';
 
 class EventView extends StatefulWidget {
 
-  late List<File> pictures = [];
+  late List<FileImage> pictures = [];
   late List<String> texts = [];
   late List<String> pictureTimes = [];
   late int id = 0;
@@ -34,8 +34,8 @@ class EventView extends StatefulWidget {
 
 class _EventView extends State<EventView> {
 
-  late List<File> pictures = [];
-  late List<String> texts = [];
+  late List<FileImage> pictures = [];
+  late List<String> texts = ['abc'];
   late List<String> pictureTimes = [];
   late int id = 0;
   int initialPage = 0;
@@ -44,10 +44,12 @@ class _EventView extends State<EventView> {
   bool imageTextVis = false;
   bool editImageTextVis = false;
 
-  late Map image;
+  late Map<String, Object?> photoMap;
   late Image bb = Image.asset("assets/images/im1.jpeg");
 
   String curText = '';
+
+  late FileImage fImage;
 
   _EventView.all({required this.pictures, required this.texts, required this.pictureTimes, required this.id});
 
@@ -99,7 +101,9 @@ class _EventView extends State<EventView> {
                   },
 
                   child: Center(
-                    child: Text(" hhhh"),
+                    child: Image(
+                      image: pictures[index],
+                    ),
                   ),
                 ),
 
@@ -118,9 +122,11 @@ class _EventView extends State<EventView> {
 
   Future readImage() async {
 
-    image = await DB.instance.getImage();
+    photoMap = await DB.instance.getImage();
 
-
+    setState(() {
+      pictures.add(Photo.fromJson(photoMap).image!);
+    });
   }
 
 
@@ -138,12 +144,16 @@ class _EventView extends State<EventView> {
     // Map<String, Object ?> m;
     // m = {"_id": "1", "image" : bytes};
 
-    DB.instance.insertImage(Photo.allFields(xFileimage: image).toJson());
+    // DB.instance.insertImage(Photo.allFields(xFileimage: image).toJson());
+
+    var x = Photo.allFields(xFileimage: image);
+    x.saveToDatabase();
+    readImage();
 
     print("____________2_____________");
 
     setState(() {
-      pictures.add(File(image.path));
+      // pictures.add(File(image.path));
       texts.add("");
       print("______________3__________");
 
