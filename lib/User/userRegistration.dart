@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snapjournal/Database/database.dart';
-import 'user.dart';
+import '../Model/user_model.dart';
 
 class UserRegistration extends StatefulWidget {
   UserRegistration({Key? key}) : super(key: key);

@@ -1,13 +1,16 @@
 // ignore_for_file: no_logic_in_create_state
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:snapjournal/Model/Event/Bloc/eventview_state.dart';
 
+
+import '../../Database/database.dart';
+import '../Model/photo_model.dart';
 import 'Bloc/eventview_bloc.dart';
 
 class EventView extends StatefulWidget {
@@ -23,7 +26,7 @@ class EventView extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _EventView.all(
-                                              pictures: pictures, 
+                                              pictures: pictures,
                                               texts: texts, 
                                               pictureTimes: pictureTimes,
                                               id: id);
@@ -40,6 +43,9 @@ class _EventView extends State<EventView> {
   bool deleteButtonVis = false;
   bool imageTextVis = false;
   bool editImageTextVis = false;
+
+  late Map image;
+  late Image bb = Image.asset("assets/images/im1.jpeg");
 
   String curText = '';
 
@@ -93,7 +99,7 @@ class _EventView extends State<EventView> {
                   },
 
                   child: Center(
-                    child: Image.file(pictures[index]),
+                    child: Text(" hhhh"),
                   ),
                 ),
 
@@ -110,13 +116,37 @@ class _EventView extends State<EventView> {
     );
   }
 
+  Future readImage() async {
+
+    image = await DB.instance.getImage();
+
+
+  }
+
+
   Future addPicture() async {
     final image = await ImagePicker().pickImage(source: ImageSource.camera);
     if(image == null) return;
 
+    // final bytes = File(image.path).readAsBytesSync();
+    // String base64Image =  base64Encode(bytes);
+    //
+    // print("img_pan : $base64Image");
+    // bb = Image.memory(base64Decode(base64Image));
+    //
+    //
+    // Map<String, Object ?> m;
+    // m = {"_id": "1", "image" : bytes};
+
+    DB.instance.insertImage(Photo.allFields(xFileimage: image).toJson());
+
+    print("____________2_____________");
+
     setState(() {
       pictures.add(File(image.path));
       texts.add("");
+      print("______________3__________");
+
       pictureTimes.add(DateFormat.Hms().format(DateTime.now()));
     });
   }
@@ -130,6 +160,7 @@ class _EventView extends State<EventView> {
         child: IconButton(
           icon: Icon(Icons.delete),
           onPressed: () {
+            readImage();
           },
         ),
       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:snapjournal/Database/database.dart';
 
-import '../Model/User/user.dart';
+import '../Model/user_model.dart';
 import '../SnapJournal/constants/enums.dart';
 
 
@@ -99,7 +99,6 @@ class _VerificationView extends State<VerificationView> {
           if(password != null && user.verifyPassword(password)){
             Navigator.pushReplacementNamed(context, '/home');
           }
-          //print('$password');
         },
         child: const Text('Login')
     );

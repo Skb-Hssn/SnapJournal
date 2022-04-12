@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:snapjournal/Model/Event/Bloc/eventview_event.dart';
-import 'package:snapjournal/Model/Event/Bloc/eventview_state.dart';
+import 'package:snapjournal/Event/Bloc/eventview_event.dart';
+import 'package:snapjournal/Event/Bloc/eventview_state.dart';
 import 'package:bloc/bloc.dart';
 
 class EventViewBloc extends Bloc<EventViewEvent, EventViewState> {

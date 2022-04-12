@@ -3,10 +3,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:snapjournal/Model/Event/Bloc/eventview_bloc.dart';
+import '../Event/Bloc/eventview_bloc.dart';
 import '../Event/event_view.dart';
 
 class DayView extends StatefulWidget {
+  const DayView({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _DayView();  
 }
