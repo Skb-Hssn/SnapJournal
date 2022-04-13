@@ -34,7 +34,7 @@ class EventView extends StatefulWidget {
 
 class _EventView extends State<EventView> {
 
-  late List<FileImage> pictures = [];
+  late List<File> pictures = [];
   late List<String> texts = ['abc'];
   late List<String> pictureTimes = [];
   late int id = 0;
@@ -101,8 +101,8 @@ class _EventView extends State<EventView> {
                   },
 
                   child: Center(
-                    child: Image(
-                      image: pictures[index],
+                    child: I mage(
+          image:Image.file(pictures[index]),
                     ),
                   ),
                 ),
