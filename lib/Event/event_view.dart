@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:snapjournal/Model/event_image_row.dart';
 
 
 import '../../Database/database.dart';
@@ -15,27 +16,18 @@ import 'Bloc/eventview_bloc.dart';
 
 class EventView extends StatefulWidget {
 
-  late List<FileImage> pictures = [];
-  late List<String> texts = [];
-  late List<String> pictureTimes = [];
   late int id = 0;
 
-  EventView({Key? key}) : super(key: key);
-
-  EventView.all({Key? key, required this.pictures, required this.texts, required this.pictureTimes, required this.id}) : super(key: key);
+  EventView({Key? key, required this.id}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _EventView.all(
-                                              pictures: pictures,
-                                              texts: texts, 
-                                              pictureTimes: pictureTimes,
-                                              id: id);
+  State<StatefulWidget> createState() => _EventView(id: id);
 }
 
 class _EventView extends State<EventView> {
 
-  late List<File> pictures = [];
-  late List<String> texts = ['abc'];
+  late List<FileImage?> pictures = [];
+  late List<String> texts = [''];
   late List<String> pictureTimes = [];
   late int id = 0;
   int initialPage = 0;
@@ -44,14 +36,36 @@ class _EventView extends State<EventView> {
   bool imageTextVis = false;
   bool editImageTextVis = false;
 
-  late Map<String, Object?> photoMap;
-  late Image bb = Image.asset("assets/images/im1.jpeg");
+  // late Map<String, Object?> photoMap;
+  // late Image bb = Image.asset("assets/images/im1.jpeg");
 
   String curText = '';
 
-  late FileImage fImage;
+  _EventView({required this.id});
 
-  _EventView.all({required this.pictures, required this.texts, required this.pictureTimes, required this.id});
+  @override
+  void initState() {
+    super.initState();
+    print("initState called");
+
+    refreshState();
+  }
+
+  Future refreshState() async {
+    print("refreshState called");
+
+    var imageIdList = await DB.instance.getImageId(id);
+    for(int i in imageIdList) {
+      pictures.add(Photo.fromJson(await DB.instance.getImage(i)).image);
+    }
+    // curText = await DB.instance.readText(id);
+    curText = 'ABC';
+
+    print("Pictures: ${pictures}");
+
+    setState(() {
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +75,7 @@ class _EventView extends State<EventView> {
         scrollDirection: Axis.horizontal,
         itemCount: pictures.length+1,
         itemBuilder: (BuildContext context, int index) {
-          if(index == pictures.length) {
+          if(index >= pictures.length) {
             return Center(
               child: IconButton(
                 icon: const Icon(
@@ -101,9 +115,10 @@ class _EventView extends State<EventView> {
                   },
 
                   child: Center(
-                    child: I mage(
-          image:Image.file(pictures[index]),
-                    ),
+                    child:  Image(
+                      image: pictures[index]!,
+                      // image: AssetImage('assets/images/im1.jpeg'),
+                    )
                   ),
                 ),
 
@@ -120,44 +135,29 @@ class _EventView extends State<EventView> {
     );
   }
 
-  Future readImage() async {
+  // Future readImage() async {
 
-    photoMap = await DB.instance.getImage();
+  //   photoMap = await DB.instance.getImage(0);
 
-    setState(() {
-      pictures.add(Photo.fromJson(photoMap).image!);
-    });
-  }
+  //   setState(() {
+  //     pictures.add(Photo.fromJson(photoMap).image!);
+  //   });
+  // }
 
 
   Future addPicture() async {
     final image = await ImagePicker().pickImage(source: ImageSource.camera);
     if(image == null) return;
 
-    // final bytes = File(image.path).readAsBytesSync();
-    // String base64Image =  base64Encode(bytes);
-    //
-    // print("img_pan : $base64Image");
-    // bb = Image.memory(base64Decode(base64Image));
-    //
-    //
-    // Map<String, Object ?> m;
-    // m = {"_id": "1", "image" : bytes};
+    var P = Photo.allFields(xFileimage: image);
+    await P.saveToDatabase();
 
-    // DB.instance.insertImage(Photo.allFields(xFileimage: image).toJson());
+    pictures.add(Photo.fromJson(await DB.instance.getImage(P.id!)).image);
 
-    var x = Photo.allFields(xFileimage: image);
-    x.saveToDatabase();
-    readImage();
-
-    print("____________2_____________");
+    EventImageRow.allFields(eventId: id, imageId: P.id).saveToDatabase();
 
     setState(() {
-      // pictures.add(File(image.path));
-      texts.add("");
-      print("______________3__________");
-
-      pictureTimes.add(DateFormat.Hms().format(DateTime.now()));
+      print('added to picutures. $pictures');
     });
   }
 
@@ -170,7 +170,7 @@ class _EventView extends State<EventView> {
         child: IconButton(
           icon: Icon(Icons.delete),
           onPressed: () {
-            readImage();
+            // readImage();
           },
         ),
       ),
@@ -201,7 +201,7 @@ class _EventView extends State<EventView> {
 
             child: SingleChildScrollView(
               child: Text(
-                texts[index],
+                curText,
                 style: TextStyle(
                   color: Colors.white,
                 ),

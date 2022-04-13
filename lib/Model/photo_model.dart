@@ -41,9 +41,8 @@ class Photo {
     var time = DateTime.now();
     path = join(path!, time.toString());    //path! + time.toString();
 
-    print(path);
     await File(xFileimage!.path).copy(path!);
 
-    DB.instance.insertImage(toJson());
+    id = await DB.instance.insertImage(toJson());
   }
 }

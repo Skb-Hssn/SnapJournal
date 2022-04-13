@@ -15,9 +15,7 @@ class DayView extends StatefulWidget {
 
 class _DayView extends State<StatefulWidget> {
 
-  late List<EventView> L = [EventView(), EventView()];
-  late List<BlocProvider> B = [BlocProvider(create: (BuildContext context) => EventViewBloc(),
-                                            child: EventView())];
+  late List<EventView> L = [EventView(id: 0), EventView(id: 1)];
 
   @override
   Widget build(BuildContext context) {
