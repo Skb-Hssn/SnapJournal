@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../Database/database.dart';
 
 class PhotoFields {
   static var id = 'rowid';
-  static var image = 'imagePath';
+  static var imagepath = 'imagePath';
 }
 
 class Photo {
@@ -26,20 +27,21 @@ class Photo {
   });
 
   Map<String, Object?> toJson() => {
-    PhotoFields.image: path 
+    PhotoFields.imagepath: path
   };
 
   static Photo fromJson(Map<String, Object?> json) => Photo.allFields(
     id: json[PhotoFields.id] as int,
-    image: FileImage(File(json[PhotoFields.image] as String)),
+    image: FileImage(File(json[PhotoFields.imagepath] as String)),
   );
 
 
   Future saveToDatabase() async {
     path = (await getApplicationDocumentsDirectory()).path;
     var time = DateTime.now();
-    path = path! + time.toString();
+    path = join(path!, time.toString());    //path! + time.toString();
 
+    print(path);
     await File(xFileimage!.path).copy(path!);
 
     DB.instance.insertImage(toJson());

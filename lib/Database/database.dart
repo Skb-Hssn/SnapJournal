@@ -1,4 +1,5 @@
 import 'package:path/path.dart';
+import 'package:snapjournal/Model/photo_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -49,7 +50,7 @@ class DB {
 
     await db.execute('''
       CREATE TABLE IF NOT EXISTS $imageTable (
-          image BLOB 
+          ${PhotoFields.imagepath} TEXT 
         )
       ''');
   }
