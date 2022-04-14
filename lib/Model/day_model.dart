@@ -1,14 +1,22 @@
 class DayFields {
-  static var name = 'name';
-  static var dob = 'dob';
-  static var password = 'password';
-  static var isPasswordSet = 'isPasswordSet';
-  static var isLoggedOut = 'isLoggedOut';
-  static var favouriteQuestion = 'favouriteQuestion';
-  static var favouriteQuestionAnswer = 'favouriteQuestionAnswer';
+  static var dayid = 'dayid';
+  static var eventid = 'eventid';
 }
 
 
 class Day {
+  String ? dayid;
+  int ? eventid;
 
+  Day.allFields({this.dayid, this.eventid});
+
+  Map<String, Object?> toJson() => {
+    //UserFields.name: name,
+    DayFields.dayid: dayid,
+    DayFields.eventid: eventid,
+  };
+
+  static int fromJson(Map<String, Object?> json) => (
+    json[DayFields.eventid] as int
+  );
 }
