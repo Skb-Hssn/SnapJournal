@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:snapjournal/Model/photo_model.dart';
+import 'package:snapjournal/Model/tag_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -13,6 +14,7 @@ class DB {
   static const String imageTable = 'imageTable';
   static const String textTable = 'textTable';
   static const String eventImageRowTable = 'eventImageRowTable';
+  static const String tagTable = 'tagTable';
 
   static final DB instance = DB._init();
   static Database? _database;
@@ -72,8 +74,39 @@ class DB {
           PRIMARY KEY(${EventImageRowFields.eventId}, ${EventImageRowFields.imageId})
         )
       ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $tagTable (
+          ${TagFields.eventId} TEXT, 
+          ${TagFields.tagName} TEXT,
+          PRIMARY KEY(${EventImageRowFields.eventId}, ${TagFields.tagName})
+        )
+      ''');
   }
 
+
+
+
+  Future insertTag(Tag tag) async{
+    final db = await instance.database;
+    db.insert(tagTable, tag.toJson());
+    print("tag insert success");
+  }
+
+  Future <List<Tag>> retrieveTag() async {
+    final db = await instance.database;
+
+    final result = await db.query(tagTable );
+    return result.map((json) => Tag.fromJson(json)).toList();
+  }
+
+  Future deleteTag(String name) async {
+    final db = await instance.database;
+    await db.delete(
+      tagTable,
+      where: '${TagFields.tagName} = ?',
+      whereArgs: [name],
+    );
+  }
 
   /*
    *
@@ -95,7 +128,7 @@ class DB {
   Future deleteUser(String name) async {
     final db = await instance.database;
     await db.delete(
-      userTable, 
+      userTable,
       where: '${UserFields.name} = ?',
       whereArgs: [name],
     );
