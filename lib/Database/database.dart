@@ -74,6 +74,12 @@ class DB {
       ''');
   }
 
+
+  /*
+   *
+   * User operations
+   *
+   */
   Future insertUser(User user) async {
     final db = await instance.database;
     db.insert(userTable, user.toJson());
@@ -95,6 +101,15 @@ class DB {
     );
   }
 
+
+
+
+  /*
+   *
+   * Image operations
+   *
+   */
+
   Future<int> insertImage(Map<String, Object ?> image) async {
     final db = await instance.database;
     var ret = db.insert(imageTable, image);
@@ -114,6 +129,22 @@ class DB {
     return result[0];
   }
 
+  Future deleteImage(int id) async {
+    final db = await instance.database;
+    db.delete(
+      imageTable,
+      where: '${PhotoFields.id} = ?',
+      whereArgs: [id]
+    );
+  }
+
+
+
+  /*
+   *
+   * Text operations
+   *
+   */
   Future insertText(EventText eventText) async {
     final db = await instance.database;
     db.insert(textTable, eventText.toJson());
@@ -129,7 +160,11 @@ class DB {
       whereArgs: [id],
     );
 
+    print('Result: $result');
+
     var res = result.map((json) => EventText.fromJson(json)).toList();
+
+    print('Res: $res');
 
     if(res.isEmpty) {
       return '';
@@ -138,6 +173,34 @@ class DB {
     }
   }
 
+  Future updateText(int id, String text) async {
+    final db = await instance.database;
+    db.update(
+      textTable, 
+      {'${EventTextFields.text}' : text},
+      where: '${EventTextFields.eventId} = ?',
+      whereArgs: [id]
+    );
+
+    print('Update text: $id, $text');
+  }
+
+  Future deleteText(int id) async {
+    final db = await instance.database;
+    db.delete(
+      textTable,
+      where: '${EventTextFields.eventId} = ?',
+      whereArgs: [id]
+    );
+  }
+
+
+
+  /*
+   *
+   * Event operations
+   *
+   */
   Future <int> nextEventId() async {
     final db = await instance.database;
     final result = await db.rawQuery(
@@ -156,6 +219,15 @@ class DB {
     db.insert(eventImageRowTable, eventImageRow.toJson());
   }
 
+  Future deleteEventImageRow(EventImageRow eventImageRow) async {
+    final db = await instance.database;
+    db.delete(
+      eventImageRowTable,
+      where: '${EventImageRowFields.eventId} = ? AND ${EventImageRowFields.imageId} = ?',
+      whereArgs: [eventImageRow.eventId, eventImageRow.imageId]
+    );
+  }
+
   Future<List<int>> getImageId(int eventId) async {
     final db = await instance.database;
     final result = await db.query(
@@ -167,4 +239,5 @@ class DB {
 
     return result.map((json) => EventImageRow.fromJson(json)).toList(); 
   }
+
 }
