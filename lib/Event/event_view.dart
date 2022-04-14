@@ -12,6 +12,7 @@ import 'package:snapjournal/Model/event_image_row.dart';
 
 import '../../Database/database.dart';
 import '../Model/photo_model.dart';
+import '../Model/text_model.dart';
 import 'Bloc/eventview_bloc.dart';
 
 class EventView extends StatefulWidget {
@@ -27,41 +28,36 @@ class EventView extends StatefulWidget {
 class _EventView extends State<EventView> {
 
   late List<FileImage?> pictures = [];
-  late List<String> texts = [''];
-  late List<String> pictureTimes = [];
+  late List<int?> pictureIds = [];
+  String eventText = '';
   late int id = 0;
+
+  String curText = '';
+
   int initialPage = 0;
 
   bool deleteButtonVis = false;
   bool imageTextVis = false;
   bool editImageTextVis = false;
 
-  // late Map<String, Object?> photoMap;
-  // late Image bb = Image.asset("assets/images/im1.jpeg");
-
-  String curText = '';
-
   _EventView({required this.id});
 
   @override
   void initState() {
     super.initState();
-    print("initState called");
 
     refreshState();
   }
 
   Future refreshState() async {
-    print("refreshState called");
 
     var imageIdList = await DB.instance.getImageId(id);
     for(int i in imageIdList) {
-      pictures.add(Photo.fromJson(await DB.instance.getImage(i)).image);
+      var P = Photo.fromJson(await DB.instance.getImage(i));
+      pictures.add(P.image);
+      pictureIds.add(P.id);
     }
-    // curText = await DB.instance.readText(id);
-    curText = 'ABC';
-
-    print("Pictures: ${pictures}");
+    eventText = await DB.instance.readText(id);
 
     setState(() {
     });
@@ -117,7 +113,6 @@ class _EventView extends State<EventView> {
                   child: Center(
                     child:  Image(
                       image: pictures[index]!,
-                      // image: AssetImage('assets/images/im1.jpeg'),
                     )
                   ),
                 ),
@@ -135,14 +130,23 @@ class _EventView extends State<EventView> {
     );
   }
 
-  // Future readImage() async {
+  Future updateText() async {
+    await DB.instance.deleteText(id);
+    await DB.instance.insertText(EventText.allFields(eventId: id, text: eventText));
+  }
 
-  //   photoMap = await DB.instance.getImage(0);
+  Future deleteImage(int index) async {
+    int imageId = pictureIds[index]!;
 
-  //   setState(() {
-  //     pictures.add(Photo.fromJson(photoMap).image!);
-  //   });
-  // }
+    pictures.removeAt(index);
+    pictureIds.removeAt(index);
+
+
+    await DB.instance.deleteEventImageRow(EventImageRow.allFields(eventId: id, imageId: imageId));
+    await Photo.deleteImage(imageId);
+
+    setState(() {});
+  }
 
 
   Future addPicture() async {
@@ -152,12 +156,14 @@ class _EventView extends State<EventView> {
     var P = Photo.allFields(xFileimage: image);
     await P.saveToDatabase();
 
-    pictures.add(Photo.fromJson(await DB.instance.getImage(P.id!)).image);
+    var X = Photo.fromJson(await DB.instance.getImage(P.id!));
+
+    pictures.add(X.image);
+    pictureIds.add(P.id);
 
     EventImageRow.allFields(eventId: id, imageId: P.id).saveToDatabase();
 
     setState(() {
-      print('added to picutures. $pictures');
     });
   }
 
@@ -168,9 +174,9 @@ class _EventView extends State<EventView> {
         right: 20,
         top: 20,
         child: IconButton(
-          icon: Icon(Icons.delete),
+          icon: const Icon(Icons.delete),
           onPressed: () {
-            // readImage();
+            deleteImage(index);
           },
         ),
       ),
@@ -190,19 +196,19 @@ class _EventView extends State<EventView> {
           child: Container(
             height: 500,
             width: 300,
-            padding: EdgeInsets.all(40),
+            padding: const EdgeInsets.all(40),
             decoration: BoxDecoration(
-              color: Color.fromRGBO(0, 0, 0, 0.7),
+              color: const Color.fromRGBO(0, 0, 0, 0.7),
               border: Border.all(
                 color: Colors.black,
               ),
-              borderRadius: BorderRadius.all(Radius.circular(20))
+              borderRadius: const BorderRadius.all(Radius.circular(20))
             ),
 
             child: SingleChildScrollView(
               child: Text(
-                curText,
-                style: TextStyle(
+                eventText,
+                style: const TextStyle(
                   color: Colors.white,
                 ),
               ),
@@ -226,17 +232,18 @@ class _EventView extends State<EventView> {
             border: Border.all(
               color: Colors.black,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(20))),
+            borderRadius: const BorderRadius.all(Radius.circular(20))),
 
             child: Column(
               children: [
                 IconButton(
                   onPressed: () {
                     setState(() {
-                      texts[index] = curText;
+                      eventText = curText;
                       curText = '';
                       editImageTextVis = false;
                       imageTextVis = true;
+                      updateText();
                     });
                   }, 
                   icon: const Icon(
@@ -246,7 +253,7 @@ class _EventView extends State<EventView> {
                 ),
                 Form(
                   child: TextFormField(
-                    initialValue: texts[index],
+                    initialValue: eventText,
                     style: const TextStyle(
                       color: Colors.white,
                     ),

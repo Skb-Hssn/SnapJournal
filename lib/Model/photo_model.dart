@@ -45,4 +45,10 @@ class Photo {
 
     id = await DB.instance.insertImage(toJson());
   }
+
+  static Future deleteImage(int id) async {
+    var dPath = (await DB.instance.getImage(id))[PhotoFields.imagepath] as String;
+    await DB.instance.deleteImage(id);
+    File(dPath).delete();
+  }
 }
