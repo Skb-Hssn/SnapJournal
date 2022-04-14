@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_tags/flutter_tags.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:snapjournal/Model/event_image_row.dart';
@@ -12,6 +13,7 @@ import 'package:snapjournal/Model/event_image_row.dart';
 
 import '../../Database/database.dart';
 import '../Model/photo_model.dart';
+import '../Model/tag_model.dart';
 import '../Model/text_model.dart';
 import 'Bloc/eventview_bloc.dart';
 
@@ -32,6 +34,9 @@ class _EventView extends State<EventView> {
   String eventText = '';
   late int id = 0;
 
+  late List<Item> tagsItemList = [];
+  final GlobalKey<TagsState> _globalKey = GlobalKey<TagsState>();
+
   String curText = '';
 
   int initialPage = 0;
@@ -39,6 +44,7 @@ class _EventView extends State<EventView> {
   bool deleteButtonVis = false;
   bool imageTextVis = false;
   bool editImageTextVis = false;
+  bool tagFieldVis = false;
 
   _EventView({required this.id});
 
@@ -58,9 +64,8 @@ class _EventView extends State<EventView> {
       pictureIds.add(P.id);
     }
     eventText = await DB.instance.readText(id);
-
-    setState(() {
-    });
+    await readTag();
+    setState(() {});
   }
 
   @override
@@ -87,6 +92,7 @@ class _EventView extends State<EventView> {
               children: [
                 InkWell(
                   onDoubleTap: () {
+
                     if(imageTextVis) {
                       setState(() {
                         imageTextVis = false;
@@ -99,6 +105,10 @@ class _EventView extends State<EventView> {
                   },
 
                   onTap: () {
+                    setState(() {
+
+                      tagFieldVis = !tagFieldVis;
+                    });
                     if(deleteButtonVis) {
                       setState(() {
                         deleteButtonVis = false;
@@ -122,6 +132,7 @@ class _EventView extends State<EventView> {
                 imageText(index),
 
                 editImageText(index),
+                tagsview(),
               ],
             );
           }
@@ -177,6 +188,7 @@ class _EventView extends State<EventView> {
           icon: const Icon(Icons.delete),
           onPressed: () {
             deleteImage(index);
+            //readTag();
           },
         ),
       ),
@@ -272,4 +284,73 @@ class _EventView extends State<EventView> {
       ),
     );
   }
+
+  Widget tagsview(){
+    return Visibility(
+      visible: tagFieldVis,
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Tags(
+          key: _globalKey,
+          itemCount: tagsItemList.length,
+          columns: 6,
+          textField: TagsTextField(
+              textStyle: TextStyle(fontSize: 14),
+              onSubmitted: (string){
+                setState(() {
+                  addTag(string);
+                });
+              }
+          ),
+          itemBuilder: (index){
+            final Item currentitem = tagsItemList[index];
+            return ItemTags(
+              index: index,
+              title: currentitem.title,
+              customData: currentitem.customData,
+              combine: ItemTagsCombine.withTextBefore,
+              onPressed: (i)=>print(i),
+              onLongPressed: (i)=>print(i),
+              removeButton: ItemTagsRemoveButton(
+                  onRemoved: (){
+                    setState(() {
+                      tagsItemList.removeAt(index);
+                    });
+                    return true;
+                  }
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Future addTag(String tag) async {
+
+    var T = Tag.allFields(eventId: id.toString(), tagName: tag);
+    await DB.instance.insertTag(T);
+    tagsItemList.add(Item(title: tag));
+
+  }
+
+  Future readTag() async{
+
+    List<Tag> t = await DB.instance.retrieveTag();
+
+    int len = t.length;
+    print(len);
+    setState(() {
+
+      for(int i = 0; i < len; i++) {
+        tagsItemList.add(Item(title: t[i].tagName));
+      }
+
+    });
+
+  }
+
+
+
+
 }
