@@ -1,4 +1,5 @@
 import 'package:path/path.dart';
+import 'package:snapjournal/Model/day_model.dart';
 import 'package:snapjournal/Model/photo_model.dart';
 import 'package:snapjournal/Model/tag_model.dart';
 import 'package:sqflite/sqflite.dart';
@@ -81,7 +82,43 @@ class DB {
           PRIMARY KEY(${EventImageRowFields.eventId}, ${TagFields.tagName})
         )
       ''');
+
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $dayTable (
+          ${DayFields.eventid} INTEGER, 
+          ${DayFields.dayid} TEXT,
+          PRIMARY KEY(${DayFields.dayid}, ${DayFields.eventid})
+        )
+      ''');
   }
+
+
+
+
+  Future<List<int>> fetchDay(String dayID) async{
+    final db = await instance.database;
+    final result = await db.query(
+        dayTable,
+        where: '${DayFields.dayid} = ?',
+        whereArgs: [dayID],
+    );
+
+
+    //where: '${EventImageRowFields.eventId} = ? AND ${EventImageRowFields.imageId} = ?',
+    //whereArgs: [eventImageRow.eventId, eventImageRow.imageId]
+    
+
+    return result.map((json) => Day.fromJson(json)).toList();
+
+
+  }
+
+
+
+
+
+
 
 
 
@@ -99,13 +136,14 @@ class DB {
     return result.map((json) => Tag.fromJson(json)).toList();
   }
 
-  Future deleteTag(String name) async {
+  Future deleteTag(Tag tag) async {
     final db = await instance.database;
     await db.delete(
       tagTable,
-      where: '${TagFields.tagName} = ?',
-      whereArgs: [name],
+      where: '${TagFields.tagName} = ? AND ${TagFields.eventId} = ?',
+      whereArgs: [tag.tagName, tag.eventId],
     );
+
   }
 
   /*

@@ -314,6 +314,7 @@ class _EventView extends State<EventView> {
               removeButton: ItemTagsRemoveButton(
                   onRemoved: (){
                     setState(() {
+                      removeTag(currentitem.title);
                       tagsItemList.removeAt(index);
                     });
                     return true;
@@ -350,6 +351,27 @@ class _EventView extends State<EventView> {
 
   }
 
+  Future removeTag(String tag) async{
+    Tag t = Tag.allFields(eventId: id.toString(),tagName: tag);
+    DB.instance.deleteTag(t);
+  }
+
+
+  Future deleteEvent() async{
+     initState();
+
+    for(var i in tagsItemList){
+      removeTag(i.title);
+    }
+
+    DB.instance.deleteText(id); //delete text
+
+    var len = pictures.length;
+    for(int i = 0; i < len; i++){// delete images
+      deleteImage(i);
+    }
+
+  }
 
 
 
