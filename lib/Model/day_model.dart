@@ -19,4 +19,12 @@ class Day {
   static int fromJson(Map<String, Object?> json) => (
     json[DayFields.eventid] as int
   );
+
+  static String getDateFormat(DateTime d) {
+    String ret = '';
+    ret += d.day.toString().padLeft(2, '0');
+    ret += d.month.toString().padLeft(2, '0');
+    ret += d.year.toString();
+    return ret;
+  }
 }

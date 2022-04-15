@@ -94,7 +94,11 @@ class DB {
   }
 
 
-
+  /*
+   *
+   * DAY
+   *
+   */
 
   Future<List<int>> fetchDay(String dayID) async{
     final db = await instance.database;
@@ -104,29 +108,37 @@ class DB {
         whereArgs: [dayID],
     );
 
-
-    //where: '${EventImageRowFields.eventId} = ? AND ${EventImageRowFields.imageId} = ?',
-    //whereArgs: [eventImageRow.eventId, eventImageRow.imageId]
-    
-
     return result.map((json) => Day.fromJson(json)).toList();
+  }
+
+  Future insertDayEvent(Day d) async {
+    final db = await instance.database;
+    db.insert(
+      dayTable,
+      d.toJson()
+    );
+  }
 
 
+  Future deleteDayEvent(Day d) async {
+    final db = await instance.database;
+    db.delete(
+      dayTable,
+      where: '${DayFields.dayid} = ? AND ${DayFields.eventid} = ?',
+      whereArgs: [d.dayid, d.eventid]
+    );
   }
 
 
 
-
-
-
-
-
-
-
+  /*
+   *
+   * Tag 
+   *
+   */
   Future insertTag(Tag tag) async{
     final db = await instance.database;
     db.insert(tagTable, tag.toJson());
-    print("tag insert success");
   }
 
   Future <List<Tag>> retrieveTag() async {
