@@ -372,7 +372,4 @@ class _EventView extends State<EventView> {
     }
 
   }
-
-
-
 }

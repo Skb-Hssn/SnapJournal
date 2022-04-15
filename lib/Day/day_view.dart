@@ -3,104 +3,104 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../Database/database.dart';
 import '../Event/Bloc/eventview_bloc.dart';
 import '../Event/event_view.dart';
+import '../Model/day_model.dart';
+import '../Model/text_model.dart';
 
 class DayView extends StatefulWidget {
-  const DayView({Key? key}) : super(key: key);
+  late String date;
+  DayView({Key? key, required this.date}) : super(key: key);
+
 
   @override
-  State<StatefulWidget> createState() => _DayView();  
+  State<StatefulWidget> createState() => _DayView(date: date);  
 }
 
 class _DayView extends State<StatefulWidget> {
 
-  late List<EventView> L = [EventView(id: 0), EventView(id: 1)];
+  late String date;
+  late List<EventView> events = [];
+  int initialPage = 0;
+  int currentIndex = 0;
+  PageController controller = PageController(initialPage: 2);
+
+  _DayView({required this.date});
+
+  @override
+  void initState() {
+    super.initState();
+    refreshState();
+  }
+
+  Future refreshState() async {
+    var eventIdList = await DB.instance.fetchDay(date);
+
+    if(eventIdList.isEmpty) {
+      addEvent();
+    } else {
+      for(var e in eventIdList) {
+        events.add(EventView(id: e));
+      }
+    }
+
+    setState(() {
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(DateTime.now().toIso8601String()),
+        title: Text(DateTime.now().year.toString()),
+        actions: [
+          IconButton(
+            onPressed: () {
+              deleteEvent(currentIndex);
+            }, 
+            icon: Icon(
+              Icons.delete,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              addEvent();
+            },
+            icon: Icon(
+              Icons.add
+            )
+          )
+        ],
       ),
       body: PageView.builder(
         scrollDirection: Axis.vertical,
-        itemCount: L.length,
+        controller: controller,
+        itemCount: events.length,
         itemBuilder: (BuildContext context, int index) {
-          return L[index];
+          currentIndex = index;
+          return events[index];
         },
       ),
     );
+  }
 
-    /*
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('ABC'),
-      ),
-      body: Stack(
-        // ignore: prefer_const_literals_to_create_immutables
-        children: [
-          Center(
-            child: Image(
-              image: AssetImage('assets/images/im9.jpeg'),
-            ),
-          ),
-          Positioned(
-            right: 20,
-            child: Container(
-              height: 0,
-              width: 0,
-              color: Colors.blue,
-            ),
-          ),
+  Future addEvent() async {
+    var nextEventId = await DB.instance.nextEventId();
+    events.add(EventView(id: nextEventId));
+    await DB.instance.insertDayEvent(Day.allFields(dayid: date, eventid: nextEventId));
+    await DB.instance.insertText(EventText.allFields(eventId: nextEventId, text: ''));
+    controller = PageController(initialPage: events.length-1);
 
-          Center(
-            child: InkWell (
-              onDoubleTap: () {
-                print('Double');
-              },
-              splashColor: Colors.grey,
-              child: Container(
-                height: 400,
-                width: 300,
-                decoration: BoxDecoration(
-                  color: Color.fromRGBO(0, 0, 0, 0.7),
-                  border: Border.all(
-                    color: Colors.black,
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(20))
-                ),
-                child: Column (
-                  // ignore: prefer_const_literals_to_create_immutables
-                  children: [
-                    TextButton(
-                      onPressed: () {}, 
-                      child: Text('X') ,
-                    ),
+    setState(() {
+    });
+  }
 
-                    SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Text('''
-                      AB CD
-                      EF GH
-                      IJ KL
-                      MN OP
-                      QE DS
-                      LL AA
-                      WW WE
-                    ''',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                    ),
-                    ),
-                  ]
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ); */
+  Future deleteEvent(int index) async {
+    // events[index].evs.deleteEvent();
+    print('Index: $index');
+    events.removeAt(index);
+    setState(() {
+    });
   }
 }
