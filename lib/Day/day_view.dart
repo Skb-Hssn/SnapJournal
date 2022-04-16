@@ -81,7 +81,7 @@ class _DayView extends State<StatefulWidget> {
           ),
           body: PageView.builder(
             scrollDirection: Axis.vertical,
-            controller: controller,
+            controller: PageController(initialPage: state.initialPage),
             itemCount: state.eventsList.length,//events.length,
             itemBuilder: (BuildContext context, int index) {
               currentIndex = index;

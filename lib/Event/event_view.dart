@@ -20,12 +20,14 @@ import 'Bloc/eventview_bloc.dart';
 class EventView extends StatefulWidget {
 
   late int id = 0;
+  bool isEmpty = false;
 
   EventView({Key? key, required this.id}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _EventView(id: id);
 }
+
 
 class _EventView extends State<EventView> {
 
@@ -77,6 +79,7 @@ class _EventView extends State<EventView> {
         itemCount: pictures.length+1,
         itemBuilder: (BuildContext context, int index) {
           if(index >= pictures.length) {
+            // if(pictures.isNotEmpty || checkEmpty()) {
             return Center(
               child: IconButton(
                 icon: const Icon(
@@ -87,6 +90,25 @@ class _EventView extends State<EventView> {
                 },
               ),
             );
+            // } else {
+            //   if(!checkEmpty()) {
+            //     return Column(
+            //       mainAxisSize: MainAxisSize.max,
+            //       children: [
+            //         imageText(),
+            //         editImageText(),
+            //         Center(
+            //           child: IconButton(
+            //             icon: const Icon(Icons.add_a_photo),
+            //             onPressed: () {},
+            //           ),
+            //         ),
+            //       ],
+            //     );
+            //   } else {
+            //     return const Center();
+            //   }
+            // }
           } else {
             return Stack (
               children: [
@@ -129,9 +151,10 @@ class _EventView extends State<EventView> {
 
                 deleteButton(index),
 
-                imageText(index),
+                imageText(),
 
-                editImageText(index),
+                editImageText(),
+                
                 tagsview(),
               ],
             );
@@ -156,12 +179,14 @@ class _EventView extends State<EventView> {
     await DB.instance.deleteEventImageRow(EventImageRow.allFields(eventId: id, imageId: imageId));
     await Photo.deleteImage(imageId);
 
+    checkEmpty();
+
     setState(() {});
   }
 
 
   Future addPicture() async {
-    final image = await ImagePicker().pickImage(source: ImageSource.camera);
+    final image = await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 25);
     if(image == null) return;
 
     var P = Photo.allFields(xFileimage: image);
@@ -195,7 +220,7 @@ class _EventView extends State<EventView> {
     );
   }
 
-  Widget imageText(int index) {
+  Widget imageText() {
     return Visibility(
       visible: imageTextVis,
       child: Center(
@@ -203,6 +228,7 @@ class _EventView extends State<EventView> {
           onDoubleTap: () {
             setState(() {
               editImageTextVis ^= true;
+              imageTextVis = false;
             });
           },
           child: Container(
@@ -231,7 +257,7 @@ class _EventView extends State<EventView> {
     );
   }
 
-  Widget editImageText(int index) {
+  Widget editImageText() {
     return Visibility(
       visible: editImageTextVis,
       child: Center(
@@ -255,6 +281,7 @@ class _EventView extends State<EventView> {
                       curText = '';
                       editImageTextVis = false;
                       imageTextVis = true;
+                      print('ImageTextVis $imageTextVis');
                       updateText();
                     });
                   }, 
@@ -371,5 +398,23 @@ class _EventView extends State<EventView> {
       deleteImage(i);
     }
 
+  }
+
+  bool checkEmpty() {
+    var isEmpty = pictures.isEmpty;
+
+    super.widget.isEmpty = isEmpty;
+
+    if(isEmpty) {
+      for (var i in tagsItemList) {
+        removeTag(i.title);
+      }
+    }
+
+    if(eventText != '' && pictures.isEmpty && !editImageTextVis) {
+      imageTextVis = true;
+    }
+
+    return isEmpty;
   }
 }
