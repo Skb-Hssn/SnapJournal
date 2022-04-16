@@ -20,7 +20,7 @@ class _SnapJournal extends State<SnapJournal> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/dayView',
+      initialRoute: '/home',
       debugShowCheckedModeBanner: false,
       routes: {
         '/loadingView' : (context) => _Loading(),
