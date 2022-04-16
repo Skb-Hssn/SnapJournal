@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:snapjournal/Day/Bloc/day_bloc.dart';
 import '../Database/database.dart';
 import '../Event/Bloc/eventview_bloc.dart';
 import '../Event/event_view.dart';
@@ -38,51 +39,59 @@ class _DayView extends State<StatefulWidget> {
     var eventIdList = await DB.instance.fetchDay(date);
 
     if(eventIdList.isEmpty) {
-      addEvent();
+      await addEvent();
     } else {
       for(var e in eventIdList) {
         events.add(EventView(id: e));
       }
     }
 
-    setState(() {
-    });
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(DateTime.now().year.toString()),
-        actions: [
-          IconButton(
-            onPressed: () {
-              deleteEvent(currentIndex);
-            }, 
-            icon: Icon(
-              Icons.delete,
-            ),
+    return BlocProvider(create: (BuildContext context) => DayBloc(events: events),
+      child: BlocBuilder<DayBloc, DayState>(
+      builder: (context, state){
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(DateTime.now().year.toString()),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  print("debug current index");
+                  print(currentIndex);
+                  context.read<DayBloc>().add(DeletingEvent(index: currentIndex));
+                  //deleteEvent(currentIndex);
+                },
+                icon: Icon(
+                  Icons.delete,
+                ),
+              ),
+              IconButton(
+                  onPressed: () {
+                    addEvent();
+                  },
+                  icon: Icon(
+                      Icons.add
+                  )
+              )
+            ],
           ),
-          IconButton(
-            onPressed: () {
-              addEvent();
+          body: PageView.builder(
+            scrollDirection: Axis.vertical,
+            controller: controller,
+            itemCount: state.eventsList.length,//events.length,
+            itemBuilder: (BuildContext context, int index) {
+              currentIndex = index;
+              return state.eventsList[index];
             },
-            icon: Icon(
-              Icons.add
-            )
-          )
-        ],
-      ),
-      body: PageView.builder(
-        scrollDirection: Axis.vertical,
-        controller: controller,
-        itemCount: events.length,
-        itemBuilder: (BuildContext context, int index) {
-          currentIndex = index;
-          return events[index];
-        },
-      ),
+          ),
+        );
+      },),
     );
+
   }
 
   Future addEvent() async {
@@ -92,15 +101,14 @@ class _DayView extends State<StatefulWidget> {
     await DB.instance.insertText(EventText.allFields(eventId: nextEventId, text: ''));
     controller = PageController(initialPage: events.length-1);
 
-    setState(() {
-    });
+    setState(() {});
   }
 
-  Future deleteEvent(int index) async {
-    // events[index].evs.deleteEvent();
-    print('Index: $index');
-    events.removeAt(index);
-    setState(() {
-    });
-  }
+  // Future deleteEvent(int index) async {
+  //   // events[index].evs.deleteEvent();
+  //   print('Index: $index');
+  //   events.removeAt(index);
+  //   setState(() {});
+  // }
+
 }
