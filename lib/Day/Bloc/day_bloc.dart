@@ -12,14 +12,32 @@ part 'day_state.dart';
 class DayBloc extends Bloc<DayEvent, DayState> {
   List<EventView> events;
 
-  DayBloc({required this.events}) : super(DayInitial(initial: events)) {
+  DayBloc({required this.events}) : super(DayInitial(initial: events, initialPage: 0)) {
     on<DeletingEvent>((event, emit) {
-      print("Bloc --------------------------------debug");
-      //print(state.eventsList[event.index]);
-      state.eventsList.removeAt(event.index);
+      // print(state.eventsList[event.index]);
+      // state.eventsList.removeAt(event.index);
      // print(state.eventsList[event.index-1]);
 
-      emit(DayDelete(deleted: state.eventsList));
+     List<EventView> L = state.eventsList;
+
+     bool haveEmptyInMiddle = false;
+
+     for(int i = 0; i < state.eventsList.length - 1; i++) {
+       if(state.eventsList.isEmpty) {
+         haveEmptyInMiddle = true;
+       }
+     }
+
+     if(haveEmptyInMiddle) {
+       L.clear();
+       for(var e in state.eventsList) {
+         if(!e.isEmpty) {
+           L.add(e);
+         }
+       }
+     }
+
+      emit(DayDelete(deleted: L, initialPage: event.index));
     });
   }
 }
