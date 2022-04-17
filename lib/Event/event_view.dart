@@ -22,10 +22,15 @@ class EventView extends StatefulWidget {
   late int id = 0;
   bool isEmpty = false;
 
+  late _EventView ev;
+
   EventView({Key? key, required this.id}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _EventView(id: id);
+  State<StatefulWidget> createState() { 
+    ev = _EventView(id: id);
+    return ev;
+  }
 }
 
 
@@ -67,7 +72,9 @@ class _EventView extends State<EventView> {
     }
     eventText = await DB.instance.readText(id);
     await readTag();
-    setState(() {});
+    if(mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -90,25 +97,6 @@ class _EventView extends State<EventView> {
                 },
               ),
             );
-            // } else {
-            //   if(!checkEmpty()) {
-            //     return Column(
-            //       mainAxisSize: MainAxisSize.max,
-            //       children: [
-            //         imageText(),
-            //         editImageText(),
-            //         Center(
-            //           child: IconButton(
-            //             icon: const Icon(Icons.add_a_photo),
-            //             onPressed: () {},
-            //           ),
-            //         ),
-            //       ],
-            //     );
-            //   } else {
-            //     return const Center();
-            //   }
-            // }
           } else {
             return Stack (
               children: [
@@ -116,29 +104,40 @@ class _EventView extends State<EventView> {
                   onDoubleTap: () {
 
                     if(imageTextVis) {
-                      setState(() {
+                      if(mounted) {
+                        setState(() {
                         imageTextVis = false;
                       });
+                      }
                     } else {
+                      if(mounted) {
                       setState(() {
                         imageTextVis = true;
                       });
+                      }
                     }
                   },
 
                   onTap: () {
-                    setState(() {
+                    if(mounted) {
+                      setState(() {
 
-                      tagFieldVis = !tagFieldVis;
-                    });
+                        tagFieldVis = !tagFieldVis;
+                      });
+                    }
+
                     if(deleteButtonVis) {
+                      if(mounted) {
                       setState(() {
                         deleteButtonVis = false;
                       });
+                      }
                     } else {
+                      if(mounted) {
                       setState(() {
                         deleteButtonVis = true;
                       });
+                      }
                     }
                   },
 
@@ -181,7 +180,9 @@ class _EventView extends State<EventView> {
 
     checkEmpty();
 
-    setState(() {});
+    if(mounted) {
+      setState(() {});
+    }
   }
 
 
@@ -199,8 +200,10 @@ class _EventView extends State<EventView> {
 
     EventImageRow.allFields(eventId: id, imageId: P.id).saveToDatabase();
 
+    if(mounted) {
     setState(() {
     });
+    }
   }
 
   Widget deleteButton(int index) {
@@ -226,10 +229,12 @@ class _EventView extends State<EventView> {
       child: Center(
         child: InkWell(
           onDoubleTap: () {
+            if(mounted) {
             setState(() {
               editImageTextVis ^= true;
               imageTextVis = false;
             });
+            }
           },
           child: Container(
             height: 500,
@@ -274,34 +279,57 @@ class _EventView extends State<EventView> {
 
             child: Column(
               children: [
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      eventText = curText;
-                      curText = '';
-                      editImageTextVis = false;
-                      imageTextVis = true;
-                      print('ImageTextVis $imageTextVis');
-                      updateText();
-                    });
-                  }, 
-                  icon: const Icon(
-                      Icons.check,
-                      color: Colors.white,
-                  ),
+                Row( 
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [ 
+                    IconButton(
+                      onPressed: () {
+                        if(mounted) {
+                          setState(() {
+                          eventText = curText;
+                          editImageTextVis = false;
+                          imageTextVis = true;
+                          updateText();
+                        });
+                      }
+                      }, 
+                      icon: const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                      ),
+                    ),
+
+                    IconButton(
+                      onPressed: () {
+                        if(mounted) {
+                          setState(() {
+                          editImageTextVis = false;
+                          imageTextVis = true;
+                        });
+                      }
+                      }, 
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ]
                 ),
                 Form(
-                  child: TextFormField(
-                    initialValue: eventText,
-                    style: const TextStyle(
-                      color: Colors.white,
+                  child: Container(
+                    padding: const EdgeInsets.all(40),
+                    child: TextFormField(
+                      initialValue: eventText,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                      onChanged: (String text) {
+                        curText = text;
+                      },
                     ),
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                    ),
-                    onChanged: (String text) {
-                      curText = text;
-                    },
                   ),
                 ),
               ],
@@ -324,9 +352,11 @@ class _EventView extends State<EventView> {
           textField: TagsTextField(
               textStyle: TextStyle(fontSize: 14),
               onSubmitted: (string){
+                if(mounted) {
                 setState(() {
                   addTag(string);
                 });
+                }
               }
           ),
           itemBuilder: (index){
@@ -340,10 +370,12 @@ class _EventView extends State<EventView> {
               onLongPressed: (i)=>print(i),
               removeButton: ItemTagsRemoveButton(
                   onRemoved: (){
+                    if(mounted) {
                     setState(() {
                       removeTag(currentitem.title);
                       tagsItemList.removeAt(index);
                     });
+                    }
                     return true;
                   }
               ),
@@ -367,7 +399,7 @@ class _EventView extends State<EventView> {
     List<Tag> t = await DB.instance.retrieveTag();
 
     int len = t.length;
-    print(len);
+    if(mounted) {
     setState(() {
 
       for(int i = 0; i < len; i++) {
@@ -375,6 +407,7 @@ class _EventView extends State<EventView> {
       }
 
     });
+    }
 
   }
 
@@ -385,7 +418,6 @@ class _EventView extends State<EventView> {
 
 
   Future deleteEvent() async{
-     initState();
 
     for(var i in tagsItemList){
       removeTag(i.title);

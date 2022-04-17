@@ -20,7 +20,7 @@ class _SnapJournal extends State<SnapJournal> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/home',
+      initialRoute: '/dayView',
       debugShowCheckedModeBanner: false,
       routes: {
         '/loadingView' : (context) => _Loading(),
@@ -29,7 +29,7 @@ class _SnapJournal extends State<SnapJournal> {
         '/userRegistration' : (context) => UserRegistration(),
         '/verificationview': (context) => VerificationView(),
         '/passwordreset': (context) => ResetPassword(),
-        '/dayView': (context) => DayView(date: '15042022'),
+        '/dayView': (context) => DayView(),
       },
       theme: ThemeData(),
     );
