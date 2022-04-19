@@ -101,17 +101,21 @@ class _ResetPasswordState extends State<ResetPassword> {
   Future createDummy() async{
     if(answer == user!.favouriteQuestionAnswer){
 
-      Navigator.pushReplacementNamed(context, '/home');
-
       await DB.instance.deleteUser(user!.name!);
 
       await DB.instance.insertUser(
-        User(
-          name: 'User',
-          dob: DateTime.now(),
-          password: 'dummy',
-        ),
+          User.allFields(
+            name: 'User',
+            dob: DateTime.now(),
+            password: 'dummy',
+            isPasswordSet: false,
+            isLoggedOut: false,
+            favouriteQuestion: '',
+            favouriteQuestionAnswer: '',
+          ),
       );
+
+      Navigator.pushReplacementNamed(context, '/home');
     }
     else {
       showToast("The answer is incorrect!!");

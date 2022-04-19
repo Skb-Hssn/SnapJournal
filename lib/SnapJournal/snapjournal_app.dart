@@ -60,8 +60,8 @@ class _Loading extends StatefulWidget {
 
 class _LoadingView extends State<_Loading> {
 
-  bool userAlreayExistsVar = false;
-  bool isPasswordSetVar = false;
+  // bool userAlreayExistsVar = false;
+  // bool isPasswordSetVar = false;
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +87,6 @@ class _LoadingView extends State<_Loading> {
 
     bool z = await isLoggedOut();
 
-    print('-----------------------------------------------------------------X : $x, Y: $y------');
-
     // setState(() async {
       if(x) {
         if(y && z) {
@@ -97,11 +95,15 @@ class _LoadingView extends State<_Loading> {
           Navigator.pushReplacementNamed(context, '/home');
         }
       } else {
-        DB.instance.insertUser(
-          User(
+        await DB.instance.insertUser(
+          User.allFields(
             name: 'User',
             dob: DateTime.now(),
             password: 'dummy',
+            isPasswordSet: false,
+            isLoggedOut: false,
+            favouriteQuestion: '',
+            favouriteQuestionAnswer: '',
           ),
         );
 
@@ -112,7 +114,6 @@ class _LoadingView extends State<_Loading> {
 
   static Future<bool> userAlreayExists() async {
     List<User> list = await DB.instance.readUser();
-    print(list[0].name);
     return list.isNotEmpty;
   }
 
@@ -124,7 +125,7 @@ class _LoadingView extends State<_Loading> {
 
   static Future<bool> isLoggedOut() async {
     List list = await DB.instance.readUser();
-    if(list.isEmpty) return true;
+    if(list.isEmpty) return false;
     return list[0].isLoggedOut;
   }
 }

@@ -106,6 +106,7 @@ class _VerificationView extends State<VerificationView> {
     return ElevatedButton(
         onPressed: () {
           if(password != null && user!.verifyPassword(password)){
+            DB.instance.updateUserLogOut(user!.name!, false);
             Navigator.pushReplacementNamed(context, '/home');
           } else {
             Fluttertoast.showToast(
@@ -122,6 +123,7 @@ class _VerificationView extends State<VerificationView> {
         child: const Text('Login')
     );
   }
+
 
  Widget _forgotpass(){
     return TextButton(

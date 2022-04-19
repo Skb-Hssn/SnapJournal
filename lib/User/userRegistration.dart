@@ -78,7 +78,7 @@ class _UserRegistration extends State<UserRegistration> {
   }
 
   Widget _usernameField() {
-    FocusNode focusNode = new FocusNode();
+    FocusNode focusNode = FocusNode();
     return TextFormField(
       focusNode: focusNode,
       decoration: InputDecoration(
@@ -189,22 +189,7 @@ class _UserRegistration extends State<UserRegistration> {
             errorMassage = 'Answert cannot be empty.';
             showToast(errorMassage);
           } else {
-            if(user != null) {
-              DB.instance.deleteUser(user!.name!);
-            }
-
-            DB.instance.insertUser(
-              User.allFields(
-                name: name,
-                dob: dob,
-                password: password,
-                isLoggedOut: false,
-                isPasswordSet: true,
-                favouriteQuestion: securityquestion,
-                favouriteQuestionAnswer: securityquestionanswer
-              )
-            );
-            Navigator.pushReplacementNamed(context, '/home');
+            updateUser();
           }
         });
       },
@@ -212,6 +197,28 @@ class _UserRegistration extends State<UserRegistration> {
   );
 
  }
+
+ Future updateUser() async {
+    if(user != null) {
+        await DB.instance.deleteUser(user!.name!);
+        print('userReg: 200 ---------------------------Username: ${user!.name}');
+    }
+
+    await DB.instance.insertUser(
+      User.allFields(
+        name: name,
+        dob: dob,
+        password: password,
+        isLoggedOut: false,
+        isPasswordSet: true,
+        favouriteQuestion: securityquestion,
+        favouriteQuestionAnswer: securityquestionanswer
+      )
+    );
+    Navigator.pushReplacementNamed(context, '/home');
+ }
+  
+  
   final List<String> securityquestions = ["What is your pet's name?", "What is your favourite color?", "What is the name of your first friend?"];
 
   Widget _securityQA(BuildContext context) {

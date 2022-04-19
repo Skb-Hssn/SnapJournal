@@ -42,11 +42,12 @@ class _Home extends State<Home> {
       print("hello2");
     }
 
-    //print('--------------------------Loginfo logged out------------------------------------${user!.isLoggedOut} $loggedIn');
 
     setState(() {
-      loggedIn = user!.isLoggedOut!;
+      loggedIn = ! (user!.isLoggedOut!);
       passSet = user!.isPasswordSet!;
+
+      print('--------------------------Loginfo logged out------------------------------------out : ${user!.isLoggedOut} in: $loggedIn');
     });
   }
 
@@ -82,7 +83,7 @@ class _Home extends State<Home> {
                 },
               ) : IconButton(
                 iconSize: 50,
-                icon: Icon(Icons.password),
+                icon: Icon(Icons.add),
                 color: Colors.white,
                 onPressed: () {
                   Navigator.pushNamed(context, '/registrationView');
@@ -211,15 +212,18 @@ class _Home extends State<Home> {
     Navigator.pushNamed(context, '/calendarView');
   }
 
+  
   Future logout(BuildContext context)async{
 
-    await DB.instance.deleteUser(user!.name!);
+    // await DB.instance.deleteUser(user!.name!);
 
-    user!.isLoggedOut = true;
+    // user!.isLoggedOut = true;
 
-    await DB.instance.insertUser(user!);
+    // await DB.instance.insertUser(user!);
+    await DB.instance.updateUserLogOut(user!.name!, true);
 
-    // await DB.instance.updateUserLogOut(user!.name!, true);
+    // print('---home ----- 225 : user logged out, name: ${user!.name} ');
+
 
     Navigator.pushReplacementNamed(context, '/verificationView');
   }
