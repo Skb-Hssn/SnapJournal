@@ -184,7 +184,16 @@ class DB {
     );
   }
 
+  Future updateUser(String name, bool log) async {
+    final db = await instance.database;
+    db.update(
+        textTable,
+        {'${UserFields.isLoggedOut}' : bool},
+        where: '${EventTextFields.eventId} = ?',
+        whereArgs: [name]
+    );
 
+  }
 
 
   /*

@@ -33,7 +33,7 @@ class _SnapJournal extends State<SnapJournal> {
         '/firstTime' : (context) => FirstTimeView(),
         '/home' : (context) => Home(),
         '/userRegistration' : (context) => UserRegistration(),
-        '/verificationview': (context) => VerificationView(),
+        '/verificationView': (context) => VerificationView(),
         '/passwordreset': (context) => ResetPassword(),
         '/dayView': (context) => DayView(),
         '/calendarView': (context) => CalendarView(),

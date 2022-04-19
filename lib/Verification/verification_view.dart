@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snapjournal/Database/database.dart';
 
 import '../Model/user_model.dart';
 import '../SnapJournal/constants/enums.dart';
+
 
 
 class VerificationView extends StatefulWidget {
@@ -98,6 +100,16 @@ class _VerificationView extends State<VerificationView> {
         onPressed: () {
           if(password != null && user.verifyPassword(password)){
             Navigator.pushReplacementNamed(context, '/home');
+          } else {
+            Fluttertoast.showToast(
+                msg: "Password is incorrect!",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0
+            );
           }
         },
         child: const Text('Login')

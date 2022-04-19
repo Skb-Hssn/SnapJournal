@@ -2,9 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:snapjournal/Database/database.dart';
 import 'package:snapjournal/TagSearch/tagsearch.dart';
 
 import '../Model/day_model.dart';
+import '../Model/user_model.dart';
 import '../SnapJournal/constants/enums.dart';
 
 class Home extends StatefulWidget {
@@ -16,7 +18,11 @@ class Home extends StatefulWidget {
 
 class _Home extends State<Home> {
 
+
+  late User user;
   bool loggedIn = false;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +49,9 @@ class _Home extends State<Home> {
               child: loggedIn ? IconButton(
                 icon: Icon(Icons.logout),
                 color: Colors.white,
-                onPressed: () {},
+                onPressed: () {
+                  logout(context);
+                },
               ) : IconButton(
                 icon: Icon(Icons.password),
                 color: Colors.white,
@@ -171,4 +179,16 @@ class _Home extends State<Home> {
   void goToCalenderView(BuildContext context) {
     Navigator.pushNamed(context, '/calendarView');
   }
+
+  Future logout(BuildContext context)async{
+    List list = await DB.instance.readUser();
+
+    if(list.isNotEmpty){
+      user = list[0];
+    }
+    await DB.instance.updateUser(user.name!, false);
+
+    Navigator.pushReplacementNamed(context, '/verificationView');
+  }
+
 }
