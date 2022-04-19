@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:snapjournal/TagSearch/tagsearch.dart';
 
 import '../SnapJournal/constants/enums.dart';
 
@@ -84,9 +85,10 @@ class Home extends StatelessWidget {
                       ),
 
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children:  [
                           Padding(
-                            padding: EdgeInsets.all(12.0),
+                            padding: EdgeInsets.all(25.0),
                             child: Text(
                               "Tag",
                               style: TextStyle(
@@ -98,9 +100,17 @@ class Home extends StatelessWidget {
                           ),
                           Align(
                             child: Padding(
-                              padding: EdgeInsets.all(12.0),
-                              child: Icon(
-                                Icons.search
+                              padding: EdgeInsets.all(25.0),
+                              child: ElevatedButton(
+                                onPressed: (){
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => TagSearch()),
+                                  );
+                                },
+                                child: Icon(
+                                  Icons.search
+                                ),
                               )
                             ),
                           )
