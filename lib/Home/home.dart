@@ -38,6 +38,8 @@ class _Home extends State<Home> {
       user = list[0];
     }
 
+    print('--------------------------------------------------------------${user!.isLoggedOut}');
+
     setState(() {
       loggedIn =! user!.isLoggedOut!;
     });
@@ -67,17 +69,19 @@ class _Home extends State<Home> {
               height: 20,
               alignment: Alignment.topRight,
               child: loggedIn ? IconButton(
-                iconSize: 30,
+                iconSize: 50,
                 icon: Icon(Icons.logout),
                 color: Colors.white,
                 onPressed: () {
                   logout(context);
                 },
               ) : IconButton(
-                iconSize: 30,
+                iconSize: 50,
                 icon: Icon(Icons.password),
                 color: Colors.white,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, '/registrationView');
+                },
               ),
             ),
             Container(

@@ -26,7 +26,7 @@ class _SnapJournal extends State<SnapJournal> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/userRegistration',
+      initialRoute: '/loadingView',
       debugShowCheckedModeBanner: false,
       routes: {
         '/loadingView' : (context) => _Loading(),
@@ -79,19 +79,25 @@ class _LoadingView extends State<_Loading> {
   }
 
   Future refreshStates() async {
+    while(DB.instance == null);
+
     bool x = await userAlreayExists();
 
     bool y = await isPasswordSet();
 
-    setState(() async {
+    bool z = await isLoggedOut();
+
+    print('-----------------------------------------------------------------X : $x, Y: $y------');
+
+    // setState(() async {
       if(x) {
-        if(y) {
-          Navigator.pushReplacementNamed(context, '/userRegistration');
+        if(y && z) {
+          Navigator.pushReplacementNamed(context, '/verificationView');
         } else {
           Navigator.pushReplacementNamed(context, '/home');
         }
       } else {
-        await DB.instance.insertUser(
+        DB.instance.insertUser(
           User(
             name: 'User',
             dob: DateTime.now(),
@@ -101,7 +107,7 @@ class _LoadingView extends State<_Loading> {
 
         Navigator.pushReplacementNamed(context, '/firstTime');
       }
-    });
+    // });
   }
 
   static Future<bool> userAlreayExists() async {
@@ -113,5 +119,11 @@ class _LoadingView extends State<_Loading> {
     List list = await DB.instance.readUser();
     if(list.isEmpty) return false;
     return list[0].isPasswordSet;
+  }
+
+  static Future<bool> isLoggedOut() async {
+    List list = await DB.instance.readUser();
+    if(list.isEmpty) return true;
+    return list[0].isLoggedOut;
   }
 }

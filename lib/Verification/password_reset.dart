@@ -29,7 +29,9 @@ class _ResetPasswordState extends State<ResetPassword> {
     List list = await DB.instance.readUser();
 
     if(list.isNotEmpty){
-      user = list[0];
+      setState(() {
+        user = list[0];
+      });
     }
   }
 
@@ -68,7 +70,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   Widget _question(){
     return Text(
-      '${user!.favouriteQuestion}'
+      user == null ? '' : '${user!.favouriteQuestion}'
     );
   }
 

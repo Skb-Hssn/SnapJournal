@@ -195,12 +195,11 @@ class DB {
     db.update(
         userTable,
         {'${UserFields.isLoggedOut}' : s},
-        where: '${UserFields.isLoggedOut} = ?',
+        where: '${UserFields.name} = ?',
         whereArgs: [name]
     );
-
-
   }
+
 
   Future updateUserAllFields(User user) async {
     final db = await instance.database;
