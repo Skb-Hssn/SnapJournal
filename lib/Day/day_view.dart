@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snapjournal/Day/Bloc/day_bloc.dart';
+import 'package:snapjournal/SnapJournal/constants/enums.dart';
 import '../Database/database.dart';
 import '../Event/Bloc/eventview_bloc.dart';
 import '../Event/event_view.dart';
@@ -23,7 +24,7 @@ class _DayView extends State<StatefulWidget> {
   final String initialPageString = 'initialPage';
   final String  dateString = 'date';
 
-  late String date;
+  String? date;
   late List<EventView> events = [];
   int initialPage = 0;
   int currentIndex = 0;
@@ -32,19 +33,24 @@ class _DayView extends State<StatefulWidget> {
 
   bool init = true;
 
+  bool loading = true;
+
   @override
   void initState() {
     super.initState();
-    refreshState();
+    loading = true;
+    if(!init) {
+      refreshState();
+    }
   }
 
   Future refreshState() async {
     if(events.isNotEmpty) return;
 
-    var eventIdList = await DB.instance.fetchDay(date);
+    var eventIdList = await DB.instance.fetchDay(date!);
 
     if(eventIdList.isEmpty) {
-      await addEvent();
+      // await addEvent();
     } else {
       for(var e in eventIdList) {
         events.add(EventView(id: e));
@@ -52,22 +58,32 @@ class _DayView extends State<StatefulWidget> {
     }
 
     if(mounted) {
-      setState(() {});
+      setState(() {loading = false;});
     }
   }
 
-  void fetchArguments(BuildContext context) {
+  Future fetchArguments(BuildContext context) async {
     arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
 
     if(arguments[initialPageString] == null) arguments[initialPageString] = 0;
     if(arguments[dateString] == null) arguments[dateString] = Day.getDateFormat(DateTime.now());
 
     initialPage = arguments[initialPageString];
-    controller = PageController(initialPage: initialPage);
 
     date = arguments[dateString];
 
-    refreshState();
+    await refreshState();
+
+    if(initialPage == -1) {
+      initialPage = events.length + 1;
+      await addEvent();
+    }
+
+    controller = PageController(initialPage: initialPage);
+
+    if(mounted) {
+      setState(() {loading = false;});
+    }
   }
 
   @override
@@ -78,13 +94,14 @@ class _DayView extends State<StatefulWidget> {
       init = false;
     }
 
-    return BlocProvider(create: (BuildContext context) => DayBloc(events: events),
+    return loading? Center(child: CircularProgressIndicator())
+      :BlocProvider(create: (BuildContext context) => DayBloc(events: events),
       child: BlocBuilder<DayBloc, DayState>(
       builder: (context, state){
         return Scaffold(
           appBar: AppBar(
-            title: Text(DateTime.now().year.toString()),
-            backgroundColor: Colors.black,
+            title: Text(Day.getDateFormatWithMonthName(date!)),
+            backgroundColor: Color(darkVioletOp),
             actions: [
               IconButton(
                 onPressed: () {

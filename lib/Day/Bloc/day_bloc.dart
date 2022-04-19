@@ -14,10 +14,6 @@ class DayBloc extends Bloc<DayEvent, DayState> {
 
   DayBloc({required this.events}) : super(DayInitial(initial: events, initialPage: 0)) {
     on<DeletingEvent>((event, emit) {
-      // print(state.eventsList[event.index]);
-      // state.eventsList.removeAt(event.index);
-     // print(state.eventsList[event.index-1]);
-
      List<EventView> L = state.eventsList;
 
      bool haveEmptyInMiddle = false;
