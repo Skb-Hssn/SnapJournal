@@ -81,7 +81,7 @@ class _Home extends State<Home> {
                 icon: Icon(Icons.add),
                 color: Colors.white,
                 onPressed: () {
-                  Navigator.pushNamed(context, '/registrationView');
+                  Navigator.pushNamed(context, '/userRegistration');
                 },
               ),
             ),

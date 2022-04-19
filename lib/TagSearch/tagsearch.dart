@@ -103,7 +103,9 @@ class _TagSearchState extends State<TagSearch> {
       }
     });
 
-    Navigator.pushReplacement<void, void>(
+
+
+    Navigator.push(
       context,
       MaterialPageRoute<void>(
         builder: (BuildContext context) =>  TaggedEventView(eventIDs: selectedIds,),
@@ -119,22 +121,13 @@ class _TagSearchState extends State<TagSearch> {
     int len = t.length;
 
     //
-    // Tag tt = Tag.allFields(eventId: "1", tagName: "tag1");
-    // Tag tt1 = Tag.allFields(eventId: "2", tagName: "tag2");
-    // Tag tt2 = Tag.allFields(eventId: "3", tagName: "tag3");
-    //  Tag tt3 = Tag.allFields(eventId: "4", tagName: "tag4");
-    //
-
 
 
     if(mounted) {
       setState(() {
 
         for(int i = 0; i < len; i++) {
-          // allTags.add(tt);
-          // allTags.add(tt1);
-          // allTags.add(tt2);
-          // allTags.add(tt3);
+
           allTags.add(Tag.allFields(eventId: t[i].eventId, tagName: t[i].tagName));
           
         }
