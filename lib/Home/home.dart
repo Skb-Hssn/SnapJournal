@@ -19,9 +19,29 @@ class Home extends StatefulWidget {
 class _Home extends State<Home> {
 
 
-  late User user;
+  User ? user;
   bool loggedIn = false;
 
+
+  @override
+  void initState() {
+    super.initState();
+
+    getUser();
+
+  }
+
+  Future getUser() async {
+    List list = await DB.instance.readUser();
+
+    if(list.isNotEmpty){
+      user = list[0];
+    }
+
+    setState(() {
+      loggedIn =! user!.isLoggedOut!;
+    });
+  }
 
 
   @override
@@ -41,18 +61,20 @@ class _Home extends State<Home> {
         ),
         child: Column(
           children: [
-            SizedBox(height: 20,),
+            SizedBox(height: 40,),
             Container(
               width: MediaQuery.of(context).size.width,
               height: 20,
               alignment: Alignment.topRight,
               child: loggedIn ? IconButton(
+                iconSize: 30,
                 icon: Icon(Icons.logout),
                 color: Colors.white,
                 onPressed: () {
                   logout(context);
                 },
               ) : IconButton(
+                iconSize: 30,
                 icon: Icon(Icons.password),
                 color: Colors.white,
                 onPressed: () {},
@@ -181,14 +203,11 @@ class _Home extends State<Home> {
   }
 
   Future logout(BuildContext context)async{
-    List list = await DB.instance.readUser();
 
-    if(list.isNotEmpty){
-      user = list[0];
-    }
-    await DB.instance.updateUserLogOut(user.name!, false);
+    await DB.instance.updateUserLogOut(user!.name!, true);
 
     Navigator.pushReplacementNamed(context, '/verificationView');
   }
+
 
 }

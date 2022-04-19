@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../Database/database.dart';
 import '../Model/user_model.dart';
@@ -14,7 +15,7 @@ class ResetPassword extends StatefulWidget {
 class _ResetPasswordState extends State<ResetPassword> {
 
   String ? answer;
-  late User user;
+  User ? user;
 
 
   @override
@@ -67,7 +68,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   Widget _question(){
     return Text(
-      '$user.favouriteQuestion'
+      '${user!.favouriteQuestion}'
     );
   }
 
@@ -88,12 +89,47 @@ class _ResetPasswordState extends State<ResetPassword> {
   Widget _verifyQA(BuildContext context){
     return ElevatedButton(
         onPressed: () {
-          if(answer == user.favouriteQuestionAnswer){
-            Navigator.pushReplacementNamed(context, '/home');
-          }
+          createDummy();
         },
         child: const Text('Verify')
     );
   }
+
+
+  Future createDummy() async{
+    if(answer == user!.favouriteQuestionAnswer){
+
+      Navigator.pushReplacementNamed(context, '/home');
+
+      await DB.instance.deleteUser(user!.name!);
+
+      await DB.instance.insertUser(
+        User(
+          name: 'User',
+          dob: DateTime.now(),
+          password: 'dummy',
+        ),
+      );
+    }
+    else {
+      showToast("The answer is incorrect!!");
+    }
+
+  }
+
+
+  void showToast(String msg) {
+    Fluttertoast.showToast(
+        msg: msg,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Color(LightViolet),
+        textColor: Colors.black,
+        fontSize: 16.0
+    );
+  }
+
+
 
 }

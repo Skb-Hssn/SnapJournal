@@ -52,7 +52,7 @@ class _UserRegistration extends State<UserRegistration> {
       body: Form (
         key: _formKey,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(30, 100, 30, 0),
+          padding: EdgeInsets.fromLTRB(30, 200, 30, 0),
           child: SingleChildScrollView( child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

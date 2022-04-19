@@ -17,7 +17,7 @@ class VerificationView extends StatefulWidget {
 
 class _VerificationView extends State<VerificationView> {
   
-  late User user;
+  User ? user;
   
   String? password;
   
@@ -98,16 +98,16 @@ class _VerificationView extends State<VerificationView> {
   Widget _loginButton(BuildContext context){
     return ElevatedButton(
         onPressed: () {
-          if(password != null && user.verifyPassword(password)){
+          if(password != null && user!.verifyPassword(password)){
             Navigator.pushReplacementNamed(context, '/home');
           } else {
             Fluttertoast.showToast(
                 msg: "Password is incorrect!",
                 toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
+                gravity: ToastGravity.BOTTOM,
                 timeInSecForIosWeb: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
+                backgroundColor: Color(LightViolet),
+                textColor: Colors.black,
                 fontSize: 16.0
             );
           }
