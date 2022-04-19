@@ -186,12 +186,20 @@ class DB {
 
   Future updateUserLogOut(String name, bool log) async {
     final db = await instance.database;
+    String s = "";
+    if(log) {
+      s = "1";
+    } else {
+      s = "0";
+    }
     db.update(
-        textTable,
-        {'${UserFields.isLoggedOut}' : log},
-        where: '${EventTextFields.eventId} = ?',
+        userTable,
+        {'${UserFields.isLoggedOut}' : s},
+        where: '${UserFields.isLoggedOut} = ?',
         whereArgs: [name]
     );
+
+
   }
 
   Future updateUserAllFields(User user) async {
