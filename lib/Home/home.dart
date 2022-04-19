@@ -23,7 +23,6 @@ class _Home extends State<Home> {
   bool loggedIn = false;
 
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
