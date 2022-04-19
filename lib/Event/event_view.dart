@@ -403,7 +403,9 @@ class _EventView extends State<EventView> {
     setState(() {
 
       for(int i = 0; i < len; i++) {
-        tagsItemList.add(Item(title: t[i].tagName));
+        if(t[i].eventId == id.toString()){
+          tagsItemList.add(Item(title: t[i].tagName));
+        }
       }
 
     });
