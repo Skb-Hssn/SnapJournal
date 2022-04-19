@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:snapjournal/Model/tag_model.dart';
 import 'package:snapjournal/TagSearch/tagsearch_view.dart';
 
+import '../Database/database.dart';
+
 class TagSearch extends StatefulWidget {
   const TagSearch({Key? key}) : super(key: key);
 
@@ -12,14 +14,11 @@ class TagSearch extends StatefulWidget {
 class _TagSearchState extends State<TagSearch> {
 
   final TextEditingController _searchBarController = TextEditingController();
-  List<Tag> selectedStates = [];
-  List<Tag> filteredStates = [];
+  List<Tag> selectedTags = [];
+  List<Tag> filteredTags = [];
 
   //fetch all the tags
-  // List<Tag> allStates = Taglist()
-  //     .getTaglist()
-  //     .map((state) => Tag(tagName: state))
-  //     .toList();
+   List<Tag> allTags = [];
 
 
   @override
@@ -34,19 +33,19 @@ class _TagSearchState extends State<TagSearch> {
       margin: const EdgeInsets.only(top: 30),
       child: SearchView(
           key: const ValueKey('key'),
-          searchBarTitle: 'Search States',
+          searchBarTitle: 'Search Tags',
           searchBarController: _searchBarController,
           onSearchTextChanged: onSearchTextChanged,
           onSelected: onSelected,
-          selected: selectedStates,
-          filtered: filteredStates,
-          all: [],
+          selected: selectedTags,
+          filtered: filteredTags,
+          all: allStates,
       ),
     );
   }
 
   void onSearchTextChanged(String text) {
-    filteredStates.clear();
+    filteredTags.clear();
     setState(() {
       if (text.isEmpty) {
         return;
@@ -55,7 +54,7 @@ class _TagSearchState extends State<TagSearch> {
         if (_state.tagName
             .replaceAll(RegExp(r'[^\w\s]+'), '')
             .toLowerCase()
-            .contains(text)) filteredStates.add(_state);
+            .contains(text)) filteredTags.add(_state);
       }
     });
   }
@@ -64,5 +63,22 @@ class _TagSearchState extends State<TagSearch> {
     print('New tag has been selected.');
   }
 
+  Future readTag() async{
+
+    List<Tag> t = await DB.instance.retrieveTag();
+
+    int len = t.length;
+
+    if(mounted) {
+      setState(() {
+
+        for(int i = 0; i < len; i++) {
+          allTags.add(Tag.search(tagName: t[i].tagName));
+        }
+
+      });
+    }
+
+  }
 
 }

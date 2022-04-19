@@ -45,7 +45,7 @@ class _SearchViewState extends State<SearchView> {
         margin: const EdgeInsets.only(left: 10, right: 10, top: 5),
         width: double.infinity,
         child: Column(
-          children: [
+          children: <Widget>[
             Container(
                 height: 45,
                 decoration: BoxDecoration(
@@ -59,6 +59,11 @@ class _SearchViewState extends State<SearchView> {
                     alignment: Alignment.topCenter,
                     child: _buildResultsList()),
               ),
+            Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                )
+            )
           ],
         )
     );
@@ -141,7 +146,7 @@ class _SearchViewState extends State<SearchView> {
   }
 
   Widget _buildFieldTags() {
-    const TextStyle textStyle = TextStyle(color: Colors.white);
+    TextStyle textStyle = TextStyle(color: Colors.white);
     return ListView(scrollDirection: Axis.horizontal, children: [
       ...widget.selected.map((tag) {
         final Size size = (TextPainter(

@@ -8,7 +8,9 @@ class Tag{
   String tagName;
   String ? eventId;
 
-  Tag({required this.tagName});
+
+
+  Tag.search({required this.tagName});
 
   Tag.allFields({
     required this.eventId,
@@ -25,4 +27,13 @@ class Tag{
     tagName: json[TagFields.tagName] as String,
     eventId: json[TagFields.eventId] as String,
   );
+
+  List<Tag> getTag(){
+    return [
+      Tag.allFields(eventId: "eventid", tagName: "name"),
+      Tag.allFields(eventId: "eventid2", tagName: "name"),
+      Tag.allFields(eventId: "eventid2", tagName: "name"),
+
+    ];
+  }
 }
