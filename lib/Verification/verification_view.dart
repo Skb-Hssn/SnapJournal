@@ -71,7 +71,9 @@ class _VerificationView extends State<VerificationView> {
           ),
 
           _passwordField(),
+          SizedBox(height: 25,),
           _loginButton(context),
+          SizedBox(height: 25,),
           _forgotpass(),
         ],
       ),
