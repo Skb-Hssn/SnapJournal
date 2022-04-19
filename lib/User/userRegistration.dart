@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snapjournal/Database/database.dart';
 import 'package:snapjournal/SnapJournal/constants/enums.dart';
 import '../Model/user_model.dart';
@@ -26,7 +27,7 @@ class _UserRegistration extends State<UserRegistration> {
 
   final _formKey = GlobalKey<FormState>();
 
-  late User user;
+  User? user;
 
   @override
   void initState() {
@@ -51,8 +52,8 @@ class _UserRegistration extends State<UserRegistration> {
       body: Form (
         key: _formKey,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30),
-          child: Column(
+          padding: EdgeInsets.fromLTRB(30, 100, 30, 0),
+          child: SingleChildScrollView( child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _usernameField(),
@@ -62,9 +63,7 @@ class _UserRegistration extends State<UserRegistration> {
               _passwordField(),
               SizedBox(height: 5,),
               _retypedPasswordField(),
-              SizedBox(height: 5,),
-              _errorMassage(),
-              SizedBox(height: 5,),
+              SizedBox(height: 10,),
               _securityQA(context),
               SizedBox(height: 5,),
               _securityQAnswer(context),
@@ -73,6 +72,7 @@ class _UserRegistration extends State<UserRegistration> {
             ],
           ),
         ),
+      ),
       ),
     );
   }
@@ -175,17 +175,22 @@ class _UserRegistration extends State<UserRegistration> {
         setState(() {
           if (name == '') {
             errorMassage = 'Username can\'t be empty';
+            showToast(errorMassage);
           } else if (password == '') {
             errorMassage = 'Password can\'t be empty';
+            showToast(errorMassage);
           } else if (dob == null) {
             errorMassage = 'Date of birth cannot be empty';
+            showToast(errorMassage);
           } else if(password != retypedPassword) {
             errorMassage = 'Password doesn\'t match';
+            showToast(errorMassage);
           } else if(securityquestionanswer == null) {
             errorMassage = 'Answert cannot be empty.';
+            showToast(errorMassage);
           } else {
             if(user != null) {
-              DB.instance.deleteUser(user.name!);
+              DB.instance.deleteUser(user!.name!);
             }
 
             DB.instance.insertUser(
@@ -269,4 +274,20 @@ class _UserRegistration extends State<UserRegistration> {
       ]
     );
   }
+
+  void showToast(String msg) {
+    Fluttertoast.showToast(
+        msg: msg,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Color(LightViolet),
+        textColor: Colors.black,
+        fontSize: 16.0
+    );
+  }
+
+  // Future saveUser(User user) async {
+  //   await DB.instance.updateUserAllFields(user);
+  // }
 }

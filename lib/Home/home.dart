@@ -186,7 +186,7 @@ class _Home extends State<Home> {
     if(list.isNotEmpty){
       user = list[0];
     }
-    await DB.instance.updateUser(user.name!, false);
+    await DB.instance.updateUserLogOut(user.name!, false);
 
     Navigator.pushReplacementNamed(context, '/verificationView');
   }

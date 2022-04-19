@@ -184,15 +184,21 @@ class DB {
     );
   }
 
-  Future updateUser(String name, bool log) async {
+  Future updateUserLogOut(String name, bool log) async {
     final db = await instance.database;
     db.update(
         textTable,
-        {'${UserFields.isLoggedOut}' : bool},
+        {'${UserFields.isLoggedOut}' : log},
         where: '${EventTextFields.eventId} = ?',
         whereArgs: [name]
     );
+  }
 
+  Future updateUserAllFields(User user) async {
+    final db = await instance.database;
+    var prvUser = await readUser();
+    await deleteUser(prvUser[0].name!);
+    await insertUser(user);
   }
 
 
