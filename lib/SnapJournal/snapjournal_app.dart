@@ -5,7 +5,7 @@ import 'package:snapjournal/Database/database.dart';
 import 'package:snapjournal/Home/calendar.dart';
 import 'package:snapjournal/SnapJournal/constants/enums.dart';
 import 'package:snapjournal/TagSearch/tagsearch.dart';
-import 'package:snapjournal/TagSearch/tagsearch_view.dart';
+import 'package:snapjournal/TagSearch/tagsearch_widget.dart';
 import 'package:snapjournal/Verification/password_reset.dart';
 import '../Day/day_view.dart';
 import '../Model/user_model.dart';

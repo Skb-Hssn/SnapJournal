@@ -34,12 +34,8 @@ class _Home extends State<Home> {
   Future getUser() async {
     List list = await DB.instance.readUser();
 
-    if(list.isNotEmpty){
+    if(list.isNotEmpty) {
       user = list[0];
-      print("hello");
-    }
-    else{
-      print("hello2");
     }
 
 
@@ -47,7 +43,6 @@ class _Home extends State<Home> {
       loggedIn = ! (user!.isLoggedOut!);
       passSet = user!.isPasswordSet!;
 
-      print('--------------------------Loginfo logged out------------------------------------out : ${user!.isLoggedOut} in: $loggedIn');
     });
   }
 
@@ -72,17 +67,17 @@ class _Home extends State<Home> {
             SizedBox(height: 40,),
             Container(
               width: MediaQuery.of(context).size.width,
-              height: 20,
+              height: 45,
               alignment: Alignment.topRight,
               child: passSet ? IconButton(
-                iconSize: 50,
+                iconSize: 35,
                 icon: Icon(Icons.logout),
                 color: Colors.white,
                 onPressed: () {
                   logout(context);
                 },
               ) : IconButton(
-                iconSize: 50,
+                iconSize: 35,
                 icon: Icon(Icons.add),
                 color: Colors.white,
                 onPressed: () {

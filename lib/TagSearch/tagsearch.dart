@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:snapjournal/Model/tag_model.dart';
-import 'package:snapjournal/TagSearch/tagsearch_view.dart';
+import 'package:snapjournal/TagSearch/tagsearch_widget.dart';
 
 import '../Database/database.dart';
+import '../Model/tag_model.dart';
+
 
 class TagSearch extends StatefulWidget {
   const TagSearch({Key? key}) : super(key: key);
+
 
   @override
   State<TagSearch> createState() => _TagSearchState();
@@ -14,87 +16,98 @@ class TagSearch extends StatefulWidget {
 class _TagSearchState extends State<TagSearch> {
 
   final TextEditingController _searchBarController = TextEditingController();
-  List<Tag> selectedStates = [];
-  List<Tag> filteredStates = [];
+  List<Tag> selectedTags = [];
+  List<Tag> filteredTags = [];
+  List<Tag> allTags = [];
 
-  //fetch all the tags
-   List<Tag> allTags = [];
-   //Taglist()
-  //     .getTaglist()
-  //     .map((state) => Tag(tagName: state))
-  //     .toList();
+  Set<String> eventIDset = {};
+
 
 
   @override
   void initState() {
-    readTag();
     super.initState();
+    readTag();
   }
+
 
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text("Search Tag")),
-        body: _buildBody(),
+      appBar: AppBar(title: Text("Search"),
+        backgroundColor: Colors.yellow,),
+      body: _buildBody(),
     );
+
   }
-
-
 
   Widget _buildBody() {
     return Container(
       margin: const EdgeInsets.only(top: 30),
-      child: SearchView(
+      child: TagSearchWidget(
           key: const ValueKey('key'),
           searchBarTitle: 'Search States',
           searchBarController: _searchBarController,
           onSearchTextChanged: onSearchTextChanged,
           onSelected: onSelected,
-          selected: selectedStates,
-          filtered: filteredStates,
-          all: allTags,
+          selected: selectedTags,
+          filtered: filteredTags,
+          all: allTags
       ),
     );
   }
 
   void onSearchTextChanged(String text) {
-    filteredStates.clear();
+    filteredTags.clear();
     setState(() {
       if (text.isEmpty) {
         return;
       }
-      for (Tag _tag in []) {
-        if (_tag.tagName
+      for (Tag _tags in allTags) {
+        if (_tags.tagName
             .replaceAll(RegExp(r'[^\w\s]+'), '')
             .toLowerCase()
-            .contains(text)) filteredStates.add(_tag);
+            .contains(text)) filteredTags.add(_tags);
       }
     });
   }
 
-  void onSelected() {
-    print('New tag has been selected.');
+  void onSelected(String eventID) {
+    print('New tag has been selected.---------------------------------------- $eventID');
   }
-
+  
+  
   Future readTag() async{
 
     List<Tag> t = await DB.instance.retrieveTag();
-
+    //
     int len = t.length;
+
+    //
+    // Tag tt = Tag.allFields(eventId: "1", tagName: "tag1");
+    // Tag tt1 = Tag.allFields(eventId: "2", tagName: "tag2");
+    // Tag tt2 = Tag.allFields(eventId: "3", tagName: "tag3");
+    //  Tag tt3 = Tag.allFields(eventId: "4", tagName: "tag4");
+    //
+
+
 
     if(mounted) {
       setState(() {
 
         for(int i = 0; i < len; i++) {
-          //allTags.add(Tag.search(tagName: t[i].tagName));
+          // allTags.add(tt);
+          // allTags.add(tt1);
+          // allTags.add(tt2);
+          // allTags.add(tt3);
+          allTags.add(Tag.allFields(eventId: t[i].eventId, tagName: t[i].tagName));
+          
         }
 
       });
     }
 
   }
-
-
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../Model/tag_model.dart';
 
-class SearchView extends StatefulWidget {
+class TagSearchWidget extends StatefulWidget {
   final TextEditingController searchBarController;
   final Function(String) onSearchTextChanged;
   final Function onSelected;
@@ -11,7 +11,7 @@ class SearchView extends StatefulWidget {
   final List<Tag> filtered;
   final List<Tag> all;
 
-  const SearchView({
+  const TagSearchWidget({
     required Key key,
     required this.searchBarTitle,
     required this.searchBarController,
@@ -21,14 +21,12 @@ class SearchView extends StatefulWidget {
     required this.filtered,
     required this.all,
   }) : super(key: key);
-  //const SearchView({Key? key}) : super(key: key);
 
   @override
-  State<SearchView> createState() => _SearchViewState();
+  _TagSearchWidgetState createState() => _TagSearchWidgetState();
 }
 
-class _SearchViewState extends State<SearchView> {
-
+class _TagSearchWidgetState extends State<TagSearchWidget> {
   bool isSearching() => widget.searchBarController.text.isNotEmpty;
 
   @override
@@ -37,7 +35,6 @@ class _SearchViewState extends State<SearchView> {
         .addListener(() => setState(() => widget.searchBarController.text));
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -60,12 +57,10 @@ class _SearchViewState extends State<SearchView> {
                     child: _buildResultsList()),
               ),
           ],
-        )
-    );
+        ));
   }
 
-
-  Widget _buildSearchBar(){
+  Widget _buildSearchBar() {
     return Row(
       children: [
         Expanded(
@@ -105,7 +100,7 @@ class _SearchViewState extends State<SearchView> {
     );
   }
 
-  Widget _buildResultsList(){
+  Widget _buildResultsList() {
     return ListView.builder(
       shrinkWrap: true,
       itemCount:
@@ -124,7 +119,7 @@ class _SearchViewState extends State<SearchView> {
                     .contains(widget.filtered.elementAt(index))) {
                   widget.selected.add(widget.filtered.elementAt(index));
                 }
-                await widget.onSelected();
+                await widget.onSelected(widget.filtered.elementAt(index).eventId);
               }
 
               setState(() => widget.searchBarController.clear());
@@ -152,8 +147,7 @@ class _SearchViewState extends State<SearchView> {
           ..layout())
             .size;
 
-        return Wrap(
-            children: [
+        return Wrap(children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             width: size.width + 55,
@@ -190,6 +184,4 @@ class _SearchViewState extends State<SearchView> {
       })
     ]);
   }
-
-
 }
