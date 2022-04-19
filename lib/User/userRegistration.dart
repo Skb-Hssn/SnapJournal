@@ -56,12 +56,19 @@ class _UserRegistration extends State<UserRegistration> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _usernameField(),
+              SizedBox(height: 25,),
               dobField(),
+              SizedBox(height: 5,),
               _passwordField(),
+              SizedBox(height: 5,),
               _retypedPasswordField(),
+              SizedBox(height: 5,),
               _errorMassage(),
-              _securityQA(),
-              _securityQAnswer(),
+              SizedBox(height: 5,),
+              _securityQA(context),
+              SizedBox(height: 5,),
+              _securityQAnswer(context),
+              SizedBox(height: 25,),
               _loginButton(context),
             ],
           ),
@@ -88,36 +95,23 @@ class _UserRegistration extends State<UserRegistration> {
     );
   }
 
-  Widget _dobText() {
-    return Text(dobText);
-  }
-
-  Widget _dobField() {
-    return GestureDetector(
-      child: new Icon(Icons.calendar_today),
-      onTap: () async {
-        final datePick= await showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime(1900),
-            lastDate: DateTime(2100)
-        );
-
-        if(datePick != null) {
-          setState(() {
-            dob = datePick;
-            dobText = "${dob?.day}/${dob?.month}/${dob?.year}";
-          });
-        }
-      }
-    );
-  }
 
   Widget dobField() {
     return Row(
       children: [
+        Icon(
+          Icons.calendar_month,
+          color: Colors.grey,
+        ),
+        SizedBox(width: 15,),
         Expanded(
-          child: Text("Date of birth: $dobText"),
+          child: Text(
+            "Date of birth: $dobText",
+            style: TextStyle(
+              color: Color.fromARGB(255, 88, 88, 88),
+              fontSize: 16,
+            ),
+          ),
         ),
         SizedBox(width: 20,),
         GestureDetector(
@@ -137,7 +131,6 @@ class _UserRegistration extends State<UserRegistration> {
               });
             }
         }),
-
       ],
     );
   }
@@ -210,37 +203,70 @@ class _UserRegistration extends State<UserRegistration> {
           }
         });
       },
-      child: const Text('Login')
+      child: const Text('Register')
   );
 
  }
   final List<String> securityquestions = ["What is your pet's name?", "What is your favourite color?", "What is the name of your first friend?"];
 
-  Widget _securityQA() {
-    return DropdownButtonFormField(
-        value: securityquestion ?? securityquestions[0],
-        items: securityquestions.map((sQA){
-          return DropdownMenuItem(
-            value: sQA,
-            child: Text('$sQA'),
-          );
-        }).toList(),
-        onChanged: (val){
-          securityquestion = val as String?;
-        });
+  Widget _securityQA(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          Icons.question_mark,
+          // color: Color.fromARGB(255, 88, 88, 88),
+          color: Colors.grey,
+        ),
+        SizedBox(width: 15,),
+        Container(
+          width: MediaQuery.of(context).size.width - 100,
+          child: DropdownButtonFormField(
+            value: securityquestion ?? securityquestions[0],
+            items: securityquestions.map((sQA){
+              return DropdownMenuItem(
+                value: sQA,
+                child: Text(
+                  '$sQA',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 88, 88, 88),
+                    fontSize: 16,
+                  ),
+                ),
+              );
+            }).toList(),
+            onChanged: (val){
+              securityquestion = val as String?;
+            }
+          )
+        )
+      ]
+    );
   }
 
 
-  Widget _securityQAnswer() {
-    return TextFormField(
-      decoration: const InputDecoration(
-        hintText: " ",
-        labelText: "Your answer",
-      ),
-      validator: (value) => null,
-      onChanged: (String text) {
-        securityquestionanswer = text;
-      },
+  Widget _securityQAnswer(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          Icons.question_answer,
+          // color: Color.fromARGB(255, 88, 88, 88),
+          color: Colors.grey,
+        ),
+        SizedBox(width: 15,),
+        Container(
+          width: MediaQuery.of(context).size.width - 100,
+          child: TextFormField(
+            decoration: const InputDecoration(
+              hintText: " ",
+              labelText: "Your answer",
+            ),
+            validator: (value) => null,
+            onChanged: (String text) {
+              securityquestionanswer = text;
+            },
+          )
+        ),
+      ]
     );
   }
 }
