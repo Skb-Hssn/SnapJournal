@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:snapjournal/Database/database.dart';
+import 'package:snapjournal/SnapJournal/constants/enums.dart';
 import '../Model/user_model.dart';
 
 class UserRegistration extends StatefulWidget {
@@ -18,7 +21,7 @@ class _UserRegistration extends State<UserRegistration> {
   String? securityquestion;
   String? securityquestionanswer;
 
-  String dobText = "Enter Date of Birth";
+  String dobText = "";
   String errorMassage = "";
 
   final _formKey = GlobalKey<FormState>();
@@ -53,8 +56,7 @@ class _UserRegistration extends State<UserRegistration> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _usernameField(),
-              _dobText(),
-              _dobField(),
+              dobField(),
               _passwordField(),
               _retypedPasswordField(),
               _errorMassage(),
@@ -69,9 +71,13 @@ class _UserRegistration extends State<UserRegistration> {
   }
 
   Widget _usernameField() {
+    FocusNode focusNode = new FocusNode();
     return TextFormField(
-      decoration: const InputDecoration(
-        icon: Icon(Icons.person),
+      focusNode: focusNode,
+      decoration: InputDecoration(
+        icon: Icon(
+          Icons.person,
+        ),
         hintText: "Enter username",
         labelText: "Username",
       ),
@@ -104,6 +110,35 @@ class _UserRegistration extends State<UserRegistration> {
           });
         }
       }
+    );
+  }
+
+  Widget dobField() {
+    return Row(
+      children: [
+        Expanded(
+          child: Text("Date of birth: $dobText"),
+        ),
+        SizedBox(width: 20,),
+        GestureDetector(
+          child: new Icon(Icons.calendar_today),
+          onTap: () async {
+            final datePick= await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(1900),
+                lastDate: DateTime(2100)
+            );
+
+            if(datePick != null) {
+              setState(() {
+                dob = datePick;
+                dobText = "${dob?.day}/${dob?.month}/${dob?.year}";
+              });
+            }
+        }),
+
+      ],
     );
   }
 

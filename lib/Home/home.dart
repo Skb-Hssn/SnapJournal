@@ -55,7 +55,7 @@ class _Home extends State<Home> {
               height: MediaQuery.of(context).size.height * 0.35,
               child:Center(
                 child: Text(
-                  "Snapjounal",
+                  "Snapjournal",
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

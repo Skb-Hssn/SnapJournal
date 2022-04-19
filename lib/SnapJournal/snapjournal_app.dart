@@ -1,6 +1,9 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:snapjournal/Database/database.dart';
 import 'package:snapjournal/Home/calendar.dart';
+import 'package:snapjournal/SnapJournal/constants/enums.dart';
 import 'package:snapjournal/TagSearch/tagsearch.dart';
 import 'package:snapjournal/TagSearch/tagsearch_view.dart';
 import 'package:snapjournal/Verification/password_reset.dart';
@@ -23,7 +26,7 @@ class _SnapJournal extends State<SnapJournal> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/home',
+      initialRoute: '/userRegistration',
       debugShowCheckedModeBanner: false,
       routes: {
         '/loadingView' : (context) => _Loading(),
@@ -36,7 +39,12 @@ class _SnapJournal extends State<SnapJournal> {
         '/calendarView': (context) => CalendarView(),
         '/searchtag': (context) => TagSearch(),
       },
-      theme: ThemeData(),
+      theme: ThemeData().copyWith(
+        // change the focus border color of the TextField
+        colorScheme: ThemeData().colorScheme.copyWith(primary: Color(darkViolet)),
+        // change the focus border color when the errorText is set
+        errorColor: Colors.purple,
+      ),
     );
   }
 

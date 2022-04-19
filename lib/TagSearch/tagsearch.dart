@@ -88,7 +88,7 @@ class _TagSearchState extends State<TagSearch> {
       setState(() {
 
         for(int i = 0; i < len; i++) {
-          allTags.add(Tag.search(tagName: t[i].tagName));
+          //allTags.add(Tag.search(tagName: t[i].tagName));
         }
 
       });

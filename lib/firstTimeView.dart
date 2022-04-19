@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'SnapJournal/constants/enums.dart';
 
@@ -10,7 +12,7 @@ class FirstTimeView extends StatelessWidget {
   @override 
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(backgroundColor),
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           Container(
@@ -32,7 +34,7 @@ class FirstTimeView extends StatelessWidget {
                 fontFamily: 'OpenSansBold',
                 fontWeight: FontWeight.w900,
                 fontSize: 40,
-                color: Colors.grey[700],
+                color: Color(darkViolet),
               ),
             ),
           ),
@@ -47,10 +49,12 @@ class FirstTimeView extends StatelessWidget {
               style: TextStyle(
                 fontFamily: 'OpenSansRegular',
                 fontSize: 20,
-                color: Colors.grey[700],
+                color: Color(darkViolet),
               ),
             ),
           ),
+
+          SizedBox(height: 20,),
 
           Container(
             height: MediaQuery.of(context).size.height * 0.35,
@@ -60,6 +64,7 @@ class FirstTimeView extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children:  [
+                SizedBox(width: 50,),
                 Expanded(
                   child: TextButton(
                     onPressed: () {
@@ -85,12 +90,14 @@ class FirstTimeView extends StatelessWidget {
                       'YES',
                       style: TextStyle(
                         fontFamily: 'OpenSansRegular',
-                        color: Colors.grey[700],
+                        color: Color(darkViolet),
                         fontSize: 15,
                       ),
                     ),
                   ),
-                )
+                ),
+
+                SizedBox(width: 50,),
               ],
             ),
           ),

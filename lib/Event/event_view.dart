@@ -9,6 +9,7 @@ import 'package:flutter_tags/flutter_tags.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:snapjournal/Model/event_image_row.dart';
+import 'package:snapjournal/SnapJournal/constants/enums.dart';
 
 
 import '../../Database/database.dart';
@@ -88,56 +89,67 @@ class _EventView extends State<EventView> {
           if(index >= pictures.length) {
             // if(pictures.isNotEmpty || checkEmpty()) {
             return Center(
-              child: IconButton(
-                icon: const Icon(
-                  Icons.add_a_photo,
-                ),
-                onPressed: () {
-                  addPicture();
-                },
-              ),
+              child: Column( 
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.add_a_photo,
+                    ),
+                    iconSize: 60,
+                    color: Color(darkViolet),
+                    onPressed: () {
+                    addPictureCamera();
+                    },
+                  ),
+
+                  SizedBox(height: 120,),
+
+                  IconButton(
+                    icon: const Icon(
+                      Icons.snippet_folder,
+                    ),
+                    iconSize: 60,
+                    onPressed: () {
+                      addPictureGallery();
+                    },
+                    color: Color(darkViolet),
+                  ),
+                ]
+              )
             );
           } else {
             return Stack (
               children: [
                 InkWell(
-                  onDoubleTap: () {
-
-                    if(imageTextVis) {
-                      if(mounted) {
-                        setState(() {
-                        imageTextVis = false;
-                      });
-                      }
-                    } else {
-                      if(mounted) {
-                      setState(() {
-                        imageTextVis = true;
-                      });
-                      }
-                    }
-                  },
-
                   onTap: () {
                     if(mounted) {
                       setState(() {
-
-                        tagFieldVis = !tagFieldVis;
+                        if(!imageTextVis && !editImageTextVis && !deleteButtonVis) {
+                          tagFieldVis ^= true;
+                        }
                       });
                     }
+                  },
 
-                    if(deleteButtonVis) {
-                      if(mounted) {
+                  onDoubleTap: () {
+                    if(mounted) {
                       setState(() {
-                        deleteButtonVis = false;
+                        if(!editImageTextVis && !tagFieldVis && !deleteButtonVis) {
+                          imageTextVis ^= true;
+                        }
                       });
-                      }
-                    } else {
-                      if(mounted) {
+                    }
+                  },
+
+                  onLongPress: () {
+                    if(mounted) {
                       setState(() {
-                        deleteButtonVis = true;
+                        if(!imageTextVis && !editImageTextVis && !tagFieldVis) {
+                          deleteButtonVis ^= true;
+                        }
                       });
-                      }
                     }
                   },
 
@@ -186,7 +198,7 @@ class _EventView extends State<EventView> {
   }
 
 
-  Future addPicture() async {
+  Future addPictureCamera() async {
     final image = await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 25);
     if(image == null) return;
 
@@ -201,8 +213,28 @@ class _EventView extends State<EventView> {
     EventImageRow.allFields(eventId: id, imageId: P.id).saveToDatabase();
 
     if(mounted) {
-    setState(() {
-    });
+      setState(() {
+      });
+    }
+  }
+
+  Future addPictureGallery() async {
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 25);
+    if(image == null) return;
+
+    var P = Photo.allFields(xFileimage: image);
+    await P.saveToDatabase();
+
+    var X = Photo.fromJson(await DB.instance.getImage(P.id!));
+
+    pictures.add(X.image);
+    pictureIds.add(P.id);
+
+    EventImageRow.allFields(eventId: id, imageId: P.id).saveToDatabase();
+
+    if(mounted) {
+      setState(() {
+      });
     }
   }
 
@@ -353,9 +385,9 @@ class _EventView extends State<EventView> {
               textStyle: TextStyle(fontSize: 14),
               onSubmitted: (string){
                 if(mounted) {
-                setState(() {
-                  addTag(string);
-                });
+                  setState(() {
+                    addTag(string);
+                  });
                 }
               }
           ),
@@ -371,10 +403,10 @@ class _EventView extends State<EventView> {
               removeButton: ItemTagsRemoveButton(
                   onRemoved: (){
                     if(mounted) {
-                    setState(() {
-                      removeTag(currentitem.title);
-                      tagsItemList.removeAt(index);
-                    });
+                      setState(() {
+                        removeTag(currentitem.title);
+                        tagsItemList.removeAt(index);
+                      });
                     }
                     return true;
                   }
