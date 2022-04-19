@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:snapjournal/Database/database.dart';
 import 'package:snapjournal/Home/calendar.dart';
+import 'package:snapjournal/TagSearch/tagsearch.dart';
 import 'package:snapjournal/TagSearch/tagsearch_view.dart';
 import 'package:snapjournal/Verification/password_reset.dart';
 import '../Day/day_view.dart';
@@ -33,7 +34,7 @@ class _SnapJournal extends State<SnapJournal> {
         '/passwordreset': (context) => ResetPassword(),
         '/dayView': (context) => DayView(),
         '/calendarView': (context) => CalendarView(),
-        //'/searchtag' (context) => SearchView(),
+        '/searchtag': (context) => TagSearch(),
       },
       theme: ThemeData(),
     );

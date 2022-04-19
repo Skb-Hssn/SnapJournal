@@ -152,7 +152,8 @@ class _SearchViewState extends State<SearchView> {
           ..layout())
             .size;
 
-        return Wrap(children: [
+        return Wrap(
+            children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             width: size.width + 55,

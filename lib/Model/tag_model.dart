@@ -8,7 +8,7 @@ class Tag{
   String tagName;
   String ? eventId;
 
-  Tag({required this.tagName});
+  Tag.search({required this.tagName});
 
   Tag.allFields({
     required this.eventId,

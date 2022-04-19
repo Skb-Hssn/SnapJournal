@@ -128,6 +128,9 @@ class _Home extends State<Home> {
                       Card(
                         color: Color(Orangish),
                         child: InkWell(
+                          onTap: (){
+                            Navigator.pushNamed(context, '/searchtag');
+                          },
                           child: Center(
                             child: Icon(
                               Icons.search,
