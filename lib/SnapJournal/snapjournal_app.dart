@@ -79,7 +79,7 @@ class _LoadingView extends State<_Loading> {
   }
 
   Future refreshStates() async {
-    while(DB.instance == null);
+    //while(DB.instance == null);
 
     bool x = await userAlreayExists();
 
@@ -111,7 +111,8 @@ class _LoadingView extends State<_Loading> {
   }
 
   static Future<bool> userAlreayExists() async {
-    List list = await DB.instance.readUser();
+    List<User> list = await DB.instance.readUser();
+    print(list[0].name);
     return list.isNotEmpty;
   }
 

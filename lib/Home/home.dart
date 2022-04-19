@@ -20,8 +20,8 @@ class _Home extends State<Home> {
 
 
   User ? user;
-  bool loggedIn = false;
-
+  bool loggedIn = true;
+  bool  passSet  = false;
 
   @override
   void initState() {
@@ -36,12 +36,17 @@ class _Home extends State<Home> {
 
     if(list.isNotEmpty){
       user = list[0];
+      print("hello");
+    }
+    else{
+      print("hello2");
     }
 
-    print('--------------------------------------------------------------${user!.isLoggedOut}');
+    //print('--------------------------Loginfo logged out------------------------------------${user!.isLoggedOut} $loggedIn');
 
     setState(() {
-      loggedIn =! user!.isLoggedOut!;
+      loggedIn = user!.isLoggedOut!;
+      passSet = user!.isPasswordSet!;
     });
   }
 
@@ -68,7 +73,7 @@ class _Home extends State<Home> {
               width: MediaQuery.of(context).size.width,
               height: 20,
               alignment: Alignment.topRight,
-              child: loggedIn ? IconButton(
+              child: passSet ? IconButton(
                 iconSize: 50,
                 icon: Icon(Icons.logout),
                 color: Colors.white,
@@ -208,7 +213,13 @@ class _Home extends State<Home> {
 
   Future logout(BuildContext context)async{
 
-    await DB.instance.updateUserLogOut(user!.name!, true);
+    await DB.instance.deleteUser(user!.name!);
+
+    user!.isLoggedOut = true;
+
+    await DB.instance.insertUser(user!);
+
+    // await DB.instance.updateUserLogOut(user!.name!, true);
 
     Navigator.pushReplacementNamed(context, '/verificationView');
   }

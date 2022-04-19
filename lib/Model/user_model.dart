@@ -21,7 +21,7 @@ class User {
 
   User({this.name, this.dob, this.password}) {
     isPasswordSet = false;
-    isLoggedOut = true;
+    isLoggedOut = false;
     favouriteQuestion = "";
     favouriteQuestionAnswer = "";
   }

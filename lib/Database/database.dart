@@ -22,6 +22,11 @@ class DB {
 
   DB._init();
 
+  bool checkTable(String tableName){
+    //SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}';
+  return true;
+  }
+
   Future<Database> get database async {
     if(_database != null) return _database!;
 
@@ -33,15 +38,15 @@ class DB {
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
-    var x = await openDatabase(path, version: 1);
+    var x = await openDatabase(path, version: 1, onCreate: _createDB);
 
-    _createDB(x, 1);
+    //_createDB(x, 1);
 
     return x;
   }
 
   Future _createDB(Database db, int version) async {
-    final db = await instance.database;
+    //final db = await instance.database;
 
     await db.execute('''
       CREATE TABLE IF NOT EXISTS $userTable (

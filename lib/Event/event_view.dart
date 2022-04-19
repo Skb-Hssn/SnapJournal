@@ -376,13 +376,19 @@ class _EventView extends State<EventView> {
     return Visibility(
       visible: tagFieldVis,
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(25),
         child: Tags(
           key: _globalKey,
           itemCount: tagsItemList.length,
           columns: 6,
           textField: TagsTextField(
-              textStyle: TextStyle(fontSize: 14),
+              width: 90,
+              autofocus: false,
+              textStyle: TextStyle(
+                fontSize: 14,
+                color: Colors.black,
+                backgroundColor: Color(LightViolet),
+              ),
               onSubmitted: (string){
                 if(mounted) {
                   setState(() {
@@ -391,15 +397,18 @@ class _EventView extends State<EventView> {
                 }
               }
           ),
+
           itemBuilder: (index){
             final Item currentitem = tagsItemList[index];
             return ItemTags(
               index: index,
               title: currentitem.title,
-              customData: currentitem.customData,
+              activeColor: Color(LightViolet),
+              textActiveColor: Colors.black,
+              // customData: currentitem.customData,
               combine: ItemTagsCombine.withTextBefore,
-              onPressed: (i)=>print(i),
-              onLongPressed: (i)=>print(i),
+              // onPressed: (i)=>print(i),
+              // onLongPressed: (i)=>print(i),
               removeButton: ItemTagsRemoveButton(
                   onRemoved: (){
                     if(mounted) {
@@ -417,7 +426,6 @@ class _EventView extends State<EventView> {
       ),
     );
   }
-
   Future addTag(String tag) async {
 
     var T = Tag.allFields(eventId: id.toString(), tagName: tag);
