@@ -5,13 +5,14 @@ class TagFields {
 }
 
 class Tag{
-  String ? tagName;
+  String tagName;
   String ? eventId;
 
+  Tag({required this.tagName});
 
   Tag.allFields({
-    this.eventId,
-    this.tagName
+    required this.eventId,
+    required this.tagName
 });
 
 

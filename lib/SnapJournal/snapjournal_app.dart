@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:snapjournal/Database/database.dart';
+import 'package:snapjournal/TagSearch/tagsearch_view.dart';
 import 'package:snapjournal/Verification/password_reset.dart';
 import '../Day/day_view.dart';
 import '../Model/user_model.dart';
@@ -30,6 +31,7 @@ class _SnapJournal extends State<SnapJournal> {
         '/verificationview': (context) => VerificationView(),
         '/passwordreset': (context) => ResetPassword(),
         '/dayView': (context) => DayView(),
+        //'/searchtag' (context) => SearchView(),
       },
       theme: ThemeData(),
     );
