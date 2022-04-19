@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:snapjournal/SnapJournal/constants/enums.dart';
+import 'package:snapjournal/TagSearch/tagevents_view.dart';
 import 'package:snapjournal/TagSearch/tagsearch_widget.dart';
 
 import '../Database/database.dart';
@@ -32,12 +34,11 @@ class _TagSearchState extends State<TagSearch> {
 
 
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Search"),
-        backgroundColor: Colors.yellow,),
+        backgroundColor: Color(darkViolet),),
       body: _buildBody(),
     );
 
@@ -54,7 +55,8 @@ class _TagSearchState extends State<TagSearch> {
           onSelected: onSelected,
           selected: selectedTags,
           filtered: filteredTags,
-          all: allTags
+          all: allTags,
+          onConfirms: onConfirms,
       ),
     );
   }
@@ -76,6 +78,37 @@ class _TagSearchState extends State<TagSearch> {
 
   void onSelected(String eventID) {
     print('New tag has been selected.---------------------------------------- $eventID');
+  }
+
+  void onConfirms() {
+    Set<String> uniqueTags = Set();
+    Map<String, Set<String>> ids = {};
+
+    for(var t in selectedTags) {
+      uniqueTags.add(t.tagName);
+    }
+
+    int uniqueTagCnt = uniqueTags.length;
+
+    for(var t in selectedTags) {
+      if(ids[t.eventId] == null) ids[t.eventId!] = {};
+      ids[t.eventId]!.add(t.tagName);
+    }
+
+    List<String> selectedIds = [];
+
+    ids.forEach((key, value) {
+      if(value.length == uniqueTagCnt) {
+        selectedIds.add(key);
+      }
+    });
+
+    Navigator.pushReplacement<void, void>(
+      context,
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) =>  TaggedEventView(eventIDs: selectedIds,),
+      ),
+    );
   }
   
   

@@ -5,6 +5,7 @@ import '../Model/tag_model.dart';
 class TagSearchWidget extends StatefulWidget {
   final TextEditingController searchBarController;
   final Function(String) onSearchTextChanged;
+  final Function() onConfirms;
   final Function onSelected;
   final String searchBarTitle;
   final List<Tag> selected;
@@ -20,6 +21,7 @@ class TagSearchWidget extends StatefulWidget {
     required this.selected,
     required this.filtered,
     required this.all,
+    required this.onConfirms,
   }) : super(key: key);
 
   @override
@@ -95,7 +97,8 @@ class _TagSearchWidgetState extends State<TagSearchWidget> {
             child: InkWell(
                 onTap: () => widget.searchBarController.clear(),
                 child: Icon(Icons.close, color: Colors.grey[500], size: 25)),
-          )
+          ),
+        IconButton(onPressed: () async {await widget.onConfirms();}, icon: Icon(Icons.search)),
       ],
     );
   }
