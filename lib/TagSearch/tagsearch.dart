@@ -77,7 +77,7 @@ class _TagSearchState extends State<TagSearch> {
   }
 
   void onSelected(String eventID) {
-    print('New tag has been selected.---------------------------------------- $eventID');
+   // print('New tag has been selected.---------------------------------------- $eventID');
   }
 
   void onConfirms() {
@@ -85,14 +85,14 @@ class _TagSearchState extends State<TagSearch> {
     Map<String, Set<String>> ids = {};
 
     for(var t in selectedTags) {
-      uniqueTags.add(t.tagName);
+      uniqueTags.add(t.tagName.toLowerCase());
     }
 
     int uniqueTagCnt = uniqueTags.length;
 
     for(var t in selectedTags) {
       if(ids[t.eventId] == null) ids[t.eventId!] = {};
-      ids[t.eventId]!.add(t.tagName);
+      ids[t.eventId]!.add(t.tagName.toLowerCase());
     }
 
     List<String> selectedIds = [];

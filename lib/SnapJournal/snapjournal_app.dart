@@ -60,8 +60,6 @@ class _Loading extends StatefulWidget {
 
 class _LoadingView extends State<_Loading> {
 
-  // bool userAlreayExistsVar = false;
-  // bool isPasswordSetVar = false;
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +77,7 @@ class _LoadingView extends State<_Loading> {
   }
 
   Future refreshStates() async {
-    //while(DB.instance == null);
+
 
     bool x = await userAlreayExists();
 
@@ -109,7 +107,7 @@ class _LoadingView extends State<_Loading> {
 
         Navigator.pushReplacementNamed(context, '/firstTime');
       }
-    // });
+
   }
 
   static Future<bool> userAlreayExists() async {

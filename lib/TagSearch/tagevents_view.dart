@@ -35,6 +35,7 @@ class _TaggedEventView extends State<StatefulWidget> {
   PageController controller = PageController(initialPage: 0);
   Map arguments = {};
 
+
   bool init = true;
 
   bool loading = true;

@@ -244,13 +244,26 @@ class _EventView extends State<EventView> {
       child: Positioned(
         right: 20,
         top: 20,
-        child: IconButton(
-          icon: const Icon(Icons.delete),
+        // child: IconButton(
+        //   icon: const Icon(Icons.delete),
+        //   onPressed: () {
+        //     deleteImage(index);
+        //     //readTag();
+        //   },
+        // ),
+        child: MaterialButton(
           onPressed: () {
             deleteImage(index);
-            //readTag();
           },
-        ),
+          color: Color(darkViolet),
+          textColor: Colors.white,
+          child: Icon(
+            Icons.delete,
+            size: 24,
+          ),
+          padding: EdgeInsets.all(16),
+          shape: CircleBorder(),
+        )
       ),
     );
   }

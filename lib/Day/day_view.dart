@@ -96,9 +96,9 @@ class _DayView extends State<StatefulWidget> {
 
     return loading? Center(child: CircularProgressIndicator())
       :BlocProvider(create: (BuildContext context) => DayBloc(events: events),
-      child: BlocBuilder<DayBloc, DayState>(
-      builder: (context, state){
-        return Scaffold(
+        child: BlocBuilder<DayBloc, DayState>(
+        builder: (context, state){
+          return Scaffold(
           appBar: AppBar(
             title: Text(Day.getDateFormatWithMonthName(date!)),
             backgroundColor: Color(darkVioletOp),
