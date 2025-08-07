@@ -1,16 +1,13 @@
-# snapjournal
+# SnapJournal
+SnapJournal is a lightweight, image-based journal app that helps you capture and cherish your life’s moments instantly. Whether it's a spontaneous adventure or a quiet coffee break, SnapJournal makes it easy to preserve and reflect on your memories.
 
-A new Flutter project.
+## Features
+- Instant Capture: Snap moments instantly using your device's camera.
 
-## Getting Started
+- Image Descriptions: Add notes or descriptions to your photos to give them context.
 
-This project is a starting point for a Flutter application.
+- Grouped Moments: Take multiple images of a single moment — they’re grouped together automatically.
 
-A few resources to get you started if this is your first Flutter project:
+- Tagging: Add custom tags to moments for easy organization.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Search & Filter: Find past moments using the calendar view or tag search.
